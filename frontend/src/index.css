@@ -1,1 +1,16 @@
 @import "tailwindcss";
+
+@theme {
+    --color-white: #fefefe;
+    --color-lighter-green: #eaf9e7;
+    --color-light-green: #c0e6ba;
+    --color-green: #4ca771;
+    --color-dark-green: #013237;
+    --color-dark-green-half: rgba(1, 50, 55, 0.5);
+    --color-dark-green-octa: rgba(1, 50, 55, 0.15);
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: var(--color-white);
+}
