@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 
 function Hero() {
     const [displayedText, setDisplayedText] = useState('');
-    const fullText = 'Your game. Your court.\nJust a tap away.';
+    const fullText = 'Your game. Your court. Just a tap away.';
     const typingSpeed = 70;
 
     useEffect(() => {
@@ -20,16 +20,6 @@ function Hero() {
         return () => clearInterval(typeTimer);
     }, []);
 
-    const renderText = (text) => {
-        const lines = text.split('\n');
-        return lines.map((line, index) => (
-            <span key={index}>
-                {line}
-                {index < lines.length - 1 && <br />}
-            </span>
-        ));
-    };
-
     return (
         <div className='w-full flex justify-center'>
             <div className='mt-[60px] mb-[60px] relative z-10 flex flex-row gap-[70px]'>
@@ -37,8 +27,8 @@ function Hero() {
                     
                 <div className='flex flex-col justify-around my-[120px]'>
                     <div className='flex flex-col gap-[15px] mb-[20px]'>
-                        <div className='text-[40px] font-bold text-dark-green leading-tight min-h-[120px]'>
-                            {renderText(displayedText)}
+                        <div className='text-[40px] font-bold text-dark-green leading-tight min-h-[120px] max-w-[500px]'>
+                            {displayedText}
                             {displayedText.length < fullText.length && (
                                 <span className="animate-pulse">|</span>
                             )}
