@@ -1,5 +1,5 @@
 # Usecase ábra
-![](usecase.png)
+![](static/img/usecase.png)
 
 # User stories
 1. János bácsi beszélgetett barátjával Sanyi bácsival, hogy milyen jó is voltak a régi szép idők, amikor régen teniszeztek. János bácsinak támadt egy ötlete: elhívja Sanyi bácsit teniszezni egyet. Felnézett így az oldalra, megnézte, hogy milyen elérhető pályák vannak, milyen árban. Képeket is nézett a helyről, de sajnos számára már túl drága az efféle mulatság, így elmondta unokájának, Kálmánnak. 
@@ -39,7 +39,7 @@
     **Kapcsolódó funkció:** `F17`
 
 # Class diagram
-![](class_diagram.png)
+![](static/img/class_diagram.png)
 
 # Adatbázis terv
-![](adatbazis.png)
+![](static/img/adatbazis.png)
