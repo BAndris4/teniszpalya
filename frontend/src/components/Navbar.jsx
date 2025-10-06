@@ -1,18 +1,17 @@
 function Navbar() {
     return (
         <nav className="h-[118px] flex justify-end items-center border-dark-green-octa border-b-[1px] z-10 relative text-[18px]">
-            <div className="flex flex-row gap-10 h-[54px] mr-[42px] items-center justify-end">
+            <div className="flex flex-row gap-8 h-[54px] mr-[42px] items-center justify-end">
                 <div className="flex flex-row gap-12 text-dark-green">
-                    <div>Home</div>
-                    <div>Courts</div>
-                    <div>Price List</div>
-                    <div>Contact</div>
+                    <div className="cursor-pointer relative after:content-[''] after:absolute after:w-0 after:h-[2px] after:bg-dark-green after:left-0 after:bottom-[-4px] after:transition-all after:duration-300 hover:after:w-full">Home</div>
+                    <div className="cursor-pointer relative after:content-[''] after:absolute after:w-0 after:h-[2px] after:bg-dark-green after:left-0 after:bottom-[-4px] after:transition-all after:duration-300 hover:after:w-full">Courts</div>
+                    <div className="cursor-pointer relative after:content-[''] after:absolute after:w-0 after:h-[2px] after:bg-dark-green after:left-0 after:bottom-[-4px] after:transition-all after:duration-300 hover:after:w-full">Price List</div>
+                    <div className="cursor-pointer relative after:content-[''] after:absolute after:w-0 after:h-[2px] after:bg-dark-green after:left-0 after:bottom-[-4px] after:transition-all after:duration-300 hover:after:w-full">Contact</div>
                 </div>
-                <div className="pl-[24px] pr-[24px] pt-[14px] pb-[14px] text-[16px] bg-white border-dark-green text-dark-green border-[1px] rounded-[30px]">Login</div>
-                <div className="pl-[24px] pr-[24px] pt-[14px] pb-[14px] text-[16px] bg-green text-white font-semibold border-[1px] rounded-[30px]">Reserve</div>
+                <div className="px-[32px] py-[12px] text-[16px] bg-white border-dark-green text-dark-green border-[1px] rounded-[30px] cursor-pointer hover:bg-dark-green hover:text-white transition-all duration-300 active:scale-95">Login</div>
+                <div className="px-[32px] py-[12px] text-[16px] bg-green text-white font-semibold rounded-[30px] cursor-pointer hover:bg-dark-green hover:shadow-lg transition-all duration-300 active:scale-95">Reserve</div>
             </div>
         </nav>
     );
 }
-
 export default Navbar;
