@@ -1,4 +1,7 @@
 
+using Microsoft.EntityFrameworkCore;
+using Teniszpalya.API.Data;
+
 namespace Teniszpalya.API;
 
 public class Program
@@ -9,6 +12,10 @@ public class Program
         builder.Services.AddAuthorization();
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
+        builder.Services.AddDbContext<AppDBContext>(options =>
+        options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+        builder.Services.AddControllers();
+
 
         var app = builder.Build();
 
@@ -20,6 +27,7 @@ public class Program
 
         app.UseHttpsRedirection();
         app.UseAuthorization();
+        app.MapControllers();
         app.Run();
     }
 }
