@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { useEffect } from "react";
 import Navbar from './components/Navbar';
 import Hero from './views/Hero';
 import Reserve from './views/Reserve';
@@ -21,6 +22,13 @@ function App() {
 
   const { topBlob, bottomBlob } = backgroundPositions[currentSection] || backgroundPositions.Hero;
 
+  useEffect(() => {
+    const hero = document.getElementById("Navbar");
+    if (hero) {
+      hero.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }, []);
+
   return (
     <div className="App relative bg-white overflow-hidden min-h-screen font-['Poppins',sans-serif]">
       <motion.div
@@ -35,7 +43,7 @@ function App() {
         transition={{ duration: 1.2, ease: "easeInOut" }}
       />
 
-      <Navbar />
+      <div id="Navbar"><Navbar /></div>
       <div id="Hero"><Hero /></div>
       <div id="Reserve"><Reserve /></div>
       <div id="Courts"><Courts /></div>
