@@ -4,7 +4,12 @@ function Navbar() {
             <div className="flex flex-row gap-8 h-[54px] mr-[42px] items-center justify-end">
                 <div className="flex flex-row gap-12 text-dark-green">
                     <div className="cursor-pointer relative after:content-[''] after:absolute after:w-0 after:h-[2px] after:bg-dark-green after:left-0 after:bottom-[-4px] after:transition-all after:duration-300 hover:after:w-full">Home</div>
-                    <div className="cursor-pointer relative after:content-[''] after:absolute after:w-0 after:h-[2px] after:bg-dark-green after:left-0 after:bottom-[-4px] after:transition-all after:duration-300 hover:after:w-full">Courts</div>
+                    <div className="cursor-pointer relative after:content-[''] after:absolute after:w-0 after:h-[2px] after:bg-dark-green after:left-0 after:bottom-[-4px] after:transition-all after:duration-300 hover:after:w-full" onClick={() => {
+                            document.getElementById("Courts").scrollIntoView({
+                                behavior: "smooth",
+                                block: "start"
+                            });
+                        }}>Courts</div>
                     <div className="cursor-pointer relative after:content-[''] after:absolute after:w-0 after:h-[2px] after:bg-dark-green after:left-0 after:bottom-[-4px] after:transition-all after:duration-300 hover:after:w-full">Price List</div>
                     <div className="cursor-pointer relative after:content-[''] after:absolute after:w-0 after:h-[2px] after:bg-dark-green after:left-0 after:bottom-[-4px] after:transition-all after:duration-300 hover:after:w-full">Contact</div>
                 </div>

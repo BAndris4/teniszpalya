@@ -47,7 +47,12 @@ function Hero() {
                             </svg>
                         </div>
                         
-                        <div className='px-[32px] py-[16px] text-[16px] bg-white border-dark-green text-dark-green border rounded-[30px] cursor-pointer hover:bg-dark-green hover:text-white transition-all duration-300 active:scale-95'>
+                        <div className='px-[32px] py-[16px] text-[16px] bg-white border-dark-green text-dark-green border rounded-[30px] cursor-pointer hover:bg-dark-green hover:text-white transition-all duration-300 active:scale-95' onClick={() => {
+                            document.getElementById("Courts").scrollIntoView({
+                                behavior: "smooth",
+                                block: "start"
+                            });
+                        }}>
                             View Courts
                         </div>
                     </div>
