@@ -1,10 +1,10 @@
 import Navbar from './components/Navbar';
-import Hero from './components/Hero';
-import Reserve from './components/Reserve';
-import Courts from './components/Courts';
-import PriceList from './components/PriceList';
-import Contact from './components/Contact';
-import Footer from './components/Footer';
+import Hero from './views/Hero';
+import Reserve from './views/Reserve';
+import Courts from './views/Courts';
+import PriceList from './views/PriceList';
+import Contact from './views/Contact';
+import Footer from './views/Footer';
 import './index.css'
 import "@fontsource/poppins/700.css";
 import "@fontsource/poppins/600.css";
