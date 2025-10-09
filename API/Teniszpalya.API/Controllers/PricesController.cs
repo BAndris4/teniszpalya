@@ -6,6 +6,7 @@ using Teniszpalya.API.Models;
 namespace Teniszpalya.API.Controllers
 {
     [ApiController]
+    [Route("/api/[controller]")]
     public class PricesController : ControllerBase
     {
         public readonly AppDBContext _context;
