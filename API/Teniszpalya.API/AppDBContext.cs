@@ -12,5 +12,6 @@ namespace Teniszpalya.API.Data
 
         public DbSet<Court> Courts { get; set; }
         public DbSet<CourtPrice> CourtPrices { get; set; }
+        public DbSet<User> Users { get; set; }
     }
 }
