@@ -6,7 +6,7 @@ namespace Teniszpalya.API.Models
     public class CourtPrice
     {
         [Key]
-        public required int ID { get; set; }
+        public int ID { get; set; }
         public bool Outdoor { get; set; }
         public Season Season { get; set; }
         public int Price { get; set; }
