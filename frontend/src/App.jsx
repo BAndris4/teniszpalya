@@ -6,7 +6,7 @@ import "@fontsource/poppins/400.css";
 import Home from './views/Home';
 import Register from './views/Register.jsx'
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Signup from './views/Signup.jsx';
+import Signup from './views/Login.jsx';
 
 function App() {
   return (
@@ -14,7 +14,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/register" element={<Register/>} />
-          <Route path="/signup" element={<Signup />} />
+          <Route path="/login" element={<Signup />} />
         </Routes>
     </BrowserRouter>
   )
