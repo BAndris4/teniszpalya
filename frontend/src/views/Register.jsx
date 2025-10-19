@@ -101,6 +101,7 @@ function Register() {
                 body: JSON.stringify(data),
             });
             console.log("User created:", await response.json());
+            document.cookie = "tempSession=true; path=/;";
             navigate("/");
         } catch (error) {
             console.error("Error:", error);
