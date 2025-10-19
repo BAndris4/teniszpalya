@@ -18,13 +18,12 @@ function Register() {
 
     const navigate = useNavigate();
 
-    const validateForm = () => {
+    const validateForm = async () => {
         let valid = true;
 
         const namePattern = /^[A-Za-zÁÉÍÓÖŐÚÜŰáéíóöőúüű]+$/;
         if (!namePattern.test(firstName)) {
             setFirstNameError("First name can only contain letters");
-            setFirstName("");
             valid = false;
         } else {
             setFirstNameError("");
@@ -32,7 +31,6 @@ function Register() {
 
         if (!namePattern.test(lastName)) {
             setLastNameError("Last name can only contain letters");
-            setLastName("");
             valid = false;
         } else {
             setLastNameError("");
@@ -41,7 +39,6 @@ function Register() {
         const phoneNumberPattern = /^\+?[0-9]+$/;
         if (!phoneNumberPattern.test(phoneNumber)) {
             setPhoneNumberError("Phone number must contain only digits and may contain a leading '+'");
-            setPhoneNumber("");
             valid = false;
         } else {
             setPhoneNumberError("");
@@ -50,7 +47,6 @@ function Register() {
         const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailPattern.test(email)) {
             setEmailError("Please enter a valid email address (e.g., user@example.com)");
-            setEmail("");
             valid = false;
         } else {
             setEmailError("");
@@ -65,12 +61,31 @@ function Register() {
             setPasswordError("");
         }
 
+        try {
+            const usersResponse = await fetch("http://localhost:5044/api/Users");
+            const users = await usersResponse.json();
+            console.log(users);
+
+            if (users.some(u => u.email === email)) {
+                setEmailError("This email is already in use");
+                valid = false;
+            }
+
+            if (users.some(u => u.phoneNumber === phoneNumber)) {
+                setPhoneNumberError("This phone number is already in use");
+                valid = false;
+            }
+        } catch (error) {
+            console.error("Error fetching users:", error);
+            valid = false;
+        }
+
         return valid;
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!validateForm()) return;
+        if (!(await validateForm())) return;
         const data = {
             firstName,
             lastName,
