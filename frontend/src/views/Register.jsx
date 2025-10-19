@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import InputField from "../components/InputField";
 
 function Register() {
@@ -9,8 +10,67 @@ function Register() {
     const [lastName, setLastName] = useState("");
     const [phoneNumber, setPhoneNumber] = useState("");
 
+    const [firstNameError, setFirstNameError] = useState("");
+    const [lastNameError, setLastNameError] = useState("");
+    const [phoneNumberError, setPhoneNumberError] = useState("");
+    const [emailError, setEmailError] = useState("");
+    const [passwordError, setPasswordError] = useState("");
+
+    const navigate = useNavigate();
+
+    const validateForm = () => {
+        let valid = true;
+
+        const namePattern = /^[A-Za-zÁÉÍÓÖŐÚÜŰáéíóöőúüű]+$/;
+        if (!namePattern.test(firstName)) {
+            setFirstNameError("First name can only contain letters");
+            setFirstName("");
+            valid = false;
+        } else {
+            setFirstNameError("");
+        }
+
+        if (!namePattern.test(lastName)) {
+            setLastNameError("Last name can only contain letters");
+            setLastName("");
+            valid = false;
+        } else {
+            setLastNameError("");
+        }
+
+        const phoneNumberPattern = /^\+?[0-9]+$/;
+        if (!phoneNumberPattern.test(phoneNumber)) {
+            setPhoneNumberError("Phone number must contain only digits and may contain a leading '+'");
+            setPhoneNumber("");
+            valid = false;
+        } else {
+            setPhoneNumberError("");
+        }
+
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailPattern.test(email)) {
+            setEmailError("Please enter a valid email address (e.g., user@example.com)");
+            setEmail("");
+            valid = false;
+        } else {
+            setEmailError("");
+        }
+
+        const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+        if (!passwordPattern.test(password)) {
+            setPasswordError("Password must be at least 8 characters and include uppercase, lowercase and number");
+            setPassword("");
+            valid = false;
+        } else {
+            setPasswordError("");
+        }
+
+        return valid;
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if (!validateForm()) return;
         const data = {
             firstName,
             lastName,
@@ -26,6 +86,7 @@ function Register() {
                 body: JSON.stringify(data),
             });
             console.log("User created:", await response.json());
+            navigate("/");
         } catch (error) {
             console.error("Error:", error);
         }
@@ -62,19 +123,23 @@ function Register() {
                             <div className="flex flex-col gap-5 sm:gap-[24px] z-10 animate-in fade-in slide-in-from-bottom-4 duration-700">
                                 <div className="flex flex-col sm:flex-row gap-4 sm:gap-5">
                                     <div className="flex-1 flex flex-col">
-                                        <InputField label="First Name" placeholder="John" value={firstName} onChange={(e) => setFirstName(e.target.value)} />
+                                        <InputField label="First Name" placeholder="John" value={firstName} onChange={(e) => setFirstName(e.target.value)} hasError={!!firstNameError}/>
+                                        {firstNameError && <p className="text-red-500 text-sm mt-1">{firstNameError}</p>}
                                     </div>
                                     <div className="flex-1 flex flex-col">
-                                        <InputField label="Last Name" placeholder="Carter" value={lastName} onChange={(e) => setLastName(e.target.value)} />
+                                        <InputField label="Last Name" placeholder="Carter" value={lastName} onChange={(e) => setLastName(e.target.value)}  hasError={!!lastNameError}/>
+                                        {lastNameError && <p className="text-red-500 text-sm mt-1">{lastNameError}</p>}
                                     </div>
                                 </div>
 
                                 <div className="flex flex-col">
-                                    <InputField label="Phone" type="tel" placeholder="Phone Number" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} />
+                                    <InputField label="Phone" type="tel" placeholder="+36201234567" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} hasError={!!phoneNumberError} />
+                                    {phoneNumberError && <p className="text-red-500 text-sm mt-1">{phoneNumberError}</p>}
                                 </div>  
 
                                 <div className="flex flex-col">
-                                    <InputField label="Email" type="email" placeholder="Email Address" value={email} onChange={(e) => setEmail(e.target.value)} />
+                                    <InputField label="Email" placeholder="user@example.com" value={email} onChange={(e) => setEmail(e.target.value)} hasError={!!emailError}/>
+                                    {emailError && <p className="text-red-500 text-sm mt-1">{emailError}</p>}
                                 </div>  
                                 
                                 <div className="flex flex-col justify-between">
@@ -85,8 +150,12 @@ function Register() {
                                             placeholder="Enter your password"
                                             value={password}
                                             onChange={(e) => setPassword(e.target.value)}
-                                            className="bg-white border border-dark-green-half rounded-[16px] w-full h-[50px] sm:h-[62px] px-4 pr-[50px] text-sm sm:text-base focus:outline-none focus:border-dark-green focus:shadow-md focus:ring-2 focus:ring-green/20 transition-all duration-300"
-                                        />
+                                            className={`bg-white rounded-[16px] w-full h-[50px] sm:h-[62px] px-4 pr-[50px] text-sm sm:text-base focus:outline-none focus:ring-2 transition-all duration-300 
+                                                ${passwordError
+                                                    ? "border border-red-500  focus:border-red-500 focus:ring-red-300"
+                                                    : "border border-dark-green-half focus:border-dark-green focus:ring-green/20"
+                                                }`}
+                                            />
                                         <button
                                             type="button"
                                             onClick={toggleVisibility}
@@ -100,6 +169,7 @@ function Register() {
                                             )}
                                         </button>
                                     </div>
+                                    {passwordError && <p className="text-red-500 text-sm mt-1">{passwordError}</p>}
                                 </div>
 
                                 <input 
