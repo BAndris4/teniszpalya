@@ -1,7 +1,37 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import InputField from "../components/InputField";
 
 function Register() {
     const [isVisible, setIsVisible] = useState(false);
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [firstName, setFirstName] = useState("");
+    const [lastName, setLastName] = useState("");
+    const [phoneNumber, setPhoneNumber] = useState("");
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        const data = {
+            firstName,
+            lastName,
+            email,
+            password,
+            phoneNumber,
+        };
+
+        try {
+            const response = await fetch("http://localhost:5044/api/Users", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data),
+            });
+            console.log("User created:", await response.json());
+        } catch (error) {
+            console.error("Error:", error);
+        }
+    };
+
+
     const toggleVisibility = () => {
         setIsVisible(!isVisible);
     };
@@ -18,91 +48,78 @@ function Register() {
                 </div>
 
                 <div className="flex-1 flex flex-col justify-center py-10 lg:py-0">
-                    <div className="flex flex-col gap-5">
-                        <div className="flex flex-col gap-4 sm:gap-[16px] items-center justify-center">
-                            <div className="text-2xl text-[36px] font-semibold text-dark-green min-h-[50px]">
-                                Sign up
+                    <form onSubmit={handleSubmit}>
+                        <div className="flex flex-col gap-5">
+                            <div className="flex flex-col gap-4 sm:gap-[16px] items-center justify-center">
+                                <div className="text-2xl text-[36px] font-semibold text-dark-green min-h-[50px]">
+                                    Sign up
+                                </div>
+                                <div className="text-center max-w-[360px] text-dark-green-half min-h-[48px] leading-relaxed text-sm sm:text-base">
+                                    Join our community and get access to exclusive features and content.
+                                </div>
                             </div>
-                            <div className="text-center max-w-[360px] text-dark-green-half min-h-[48px] leading-relaxed text-sm sm:text-base">
-                                Join our community and get access to exclusive features and content.
+
+                            <div className="flex flex-col gap-5 sm:gap-[24px] z-10 animate-in fade-in slide-in-from-bottom-4 duration-700">
+                                <div className="flex flex-col sm:flex-row gap-4 sm:gap-5">
+                                    <div className="flex-1 flex flex-col">
+                                        <InputField label="First Name" placeholder="John" value={firstName} onChange={(e) => setFirstName(e.target.value)} />
+                                    </div>
+                                    <div className="flex-1 flex flex-col">
+                                        <InputField label="Last Name" placeholder="Carter" value={lastName} onChange={(e) => setLastName(e.target.value)} />
+                                    </div>
+                                </div>
+
+                                <div className="flex flex-col">
+                                    <InputField label="Phone" type="tel" placeholder="Phone Number" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} />
+                                </div>  
+
+                                <div className="flex flex-col">
+                                    <InputField label="Email" type="email" placeholder="Email Address" value={email} onChange={(e) => setEmail(e.target.value)} />
+                                </div>  
+                                
+                                <div className="flex flex-col justify-between">
+                                    <div className="mb-2 text-dark-green font-medium text-sm sm:text-base">Password</div>
+                                    <div className="relative w-full">
+                                        <input
+                                            type={isVisible ? 'text' : 'password'}
+                                            placeholder="Enter your password"
+                                            value={password}
+                                            onChange={(e) => setPassword(e.target.value)}
+                                            className="bg-white border border-dark-green-half rounded-[16px] w-full h-[50px] sm:h-[62px] px-4 pr-[50px] text-sm sm:text-base focus:outline-none focus:border-dark-green focus:shadow-md focus:ring-2 focus:ring-green/20 transition-all duration-300"
+                                        />
+                                        <button
+                                            type="button"
+                                            onClick={toggleVisibility}
+                                            className="absolute cursor-pointer right-4 top-1/2 transform -translate-y-1/2 hover:scale-110 transition-transform duration-300"
+                                            aria-label={isVisible ? 'Hide password' : 'Show password'}
+                                        >
+                                            {isVisible ? (
+                                                <div className="w-6 h-6 bg-[url(/src/assets/eye-open.svg)] bg-cover bg-center" />
+                                            ) : (
+                                                <div className="w-6 h-6 bg-[url(/src/assets/eye-closed.svg)] bg-cover bg-center"/>
+                                            )}
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <input 
+                                    type="submit" 
+                                    disabled={!firstName || !lastName || !email || !password || !phoneNumber}
+                                    className={`bg-green text-white font-semibold rounded-[30px] h-[50px] sm:h-[62px] text-sm sm:text-base 
+                                    ${!firstName || !lastName || !email || !password || !phoneNumber ? "opacity-50 cursor-not-allowed" : "hover:bg-dark-green hover:shadow-lg active:scale-95 cursor-pointer"} 
+                                    transition-all duration-300`}
+                                    value="Sign up"
+                                />
+
+                                <div className="flex justify-center text-sm sm:text-base animate-in fade-in duration-700 delay-200">
+                                    Already have an account?&nbsp;
+                                    <a href="/login" className="text-[#2388FF] hover:underline hover:text-[#1565c0] transition-colors duration-300">
+                                        Login
+                                    </a>
+                                </div>
                             </div>
                         </div>
-
-                        <div className="flex flex-col gap-5 sm:gap-[24px] z-10 animate-in fade-in slide-in-from-bottom-4 duration-700">
-                            <div className="flex flex-col sm:flex-row gap-4 sm:gap-5">
-                                <div className="flex-1 flex flex-col">
-                                    <div className="mb-2 text-dark-green font-medium text-sm sm:text-base">First Name</div>
-                                    <input 
-                                        type="text" 
-                                        placeholder="John" 
-                                        className="bg-white border border-dark-green-half rounded-[16px] h-[50px] sm:h-[62px] px-4 text-sm sm:text-base focus:outline-none focus:border-dark-green focus:shadow-md focus:ring-2 focus:ring-green/20 transition-all duration-300"
-                                    />
-                                </div>
-                                <div className="flex-1 flex flex-col">
-                                    <div className="mb-2 text-dark-green font-medium text-sm sm:text-base">Last Name</div>
-                                    <input 
-                                        type="text" 
-                                        placeholder="Carter" 
-                                        className="bg-white border border-dark-green-half rounded-[16px] h-[50px] sm:h-[62px] px-4 text-sm sm:text-base focus:outline-none focus:border-dark-green focus:shadow-md focus:ring-2 focus:ring-green/20 transition-all duration-300"
-                                    />
-                                </div>
-                            </div>
-
-                            <div className="flex flex-col">
-                                <div className="mb-2 text-dark-green font-medium text-sm sm:text-base">Phone</div>
-                                <input 
-                                    type="tel" 
-                                    placeholder="Phone Number" 
-                                    className="bg-white border border-dark-green-half rounded-[16px] w-full h-[50px] sm:h-[62px] px-4 text-sm sm:text-base focus:outline-none focus:border-dark-green focus:shadow-md focus:ring-2 focus:ring-green/20 transition-all duration-300"
-                                />
-                            </div>  
-
-                            <div className="flex flex-col">
-                                <div className="mb-2 text-dark-green font-medium text-sm sm:text-base">Email</div>
-                                <input 
-                                    type="email" 
-                                    placeholder="Email Address" 
-                                    className="bg-white border border-dark-green-half rounded-[16px] w-full h-[50px] sm:h-[62px] px-4 text-sm sm:text-base focus:outline-none focus:border-dark-green focus:shadow-md focus:ring-2 focus:ring-green/20 transition-all duration-300"
-                                />
-                            </div>  
-                            
-                            <div className="flex flex-col justify-between">
-                                <div className="mb-2 text-dark-green font-medium text-sm sm:text-base">Password</div>
-                                <div className="relative w-full">
-                                    <input
-                                        type={isVisible ? 'text' : 'password'}
-                                        placeholder="Enter your password"
-                                        className="bg-white border border-dark-green-half rounded-[16px] w-full h-[50px] sm:h-[62px] px-4 pr-[50px] text-sm sm:text-base focus:outline-none focus:border-dark-green focus:shadow-md focus:ring-2 focus:ring-green/20 transition-all duration-300"
-                                    />
-                                    <button
-                                        type="button"
-                                        onClick={toggleVisibility}
-                                        className="absolute cursor-pointer right-4 top-1/2 transform -translate-y-1/2 hover:scale-110 transition-transform duration-300"
-                                        aria-label={isVisible ? 'Hide password' : 'Show password'}
-                                    >
-                                        {isVisible ? (
-                                            <div className="w-6 h-6 bg-[url(/src/assets/eye-open.svg)] bg-cover bg-center" />
-                                        ) : (
-                                            <div className="w-6 h-6 bg-[url(/src/assets/eye-closed.svg)] bg-cover bg-center"/>
-                                        )}
-                                    </button>
-                                </div>
-                            </div>
-
-                            <input 
-                                type="submit" 
-                                value="Sign up" 
-                                className="bg-green text-white font-semibold rounded-[30px] h-[50px] sm:h-[62px] text-sm sm:text-base hover:bg-dark-green hover:shadow-lg active:scale-95 transition-all duration-300 cursor-pointer"
-                            />
-
-                            <div className="flex justify-center text-sm sm:text-base animate-in fade-in duration-700 delay-200">
-                                Already have an account?&nbsp;
-                                <a href="/login" className="text-[#2388FF] hover:underline hover:text-[#1565c0] transition-colors duration-300">
-                                    Login
-                                </a>
-                            </div>
-                        </div>
-                    </div>
+                    </form>
                 </div>
             </div>
         </div>
