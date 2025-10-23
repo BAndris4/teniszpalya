@@ -53,7 +53,7 @@ function Register() {
         }
 
         const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
-        if (!passwordPattern.test(password)) {
+        if (passwordPattern.test(password)) {
             setPasswordError("Password must be at least 8 characters and include uppercase, lowercase and number");
             setPassword("");
             valid = false;
@@ -75,13 +75,19 @@ function Register() {
         };
 
         try {
-            const response = await fetch("http://localhost:5044/api/Register", {
+            await fetch("http://localhost:5044/api/Register", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(data),
+                body: JSON.stringify(data)
             });
-            console.log("User created:", await response.json());
-            document.cookie = "tempSession=true; path=/;";
+            console.log("User created successfully");
+            await fetch("http://localhost:5044/api/Login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email, password }),
+                credentials: "include"
+            });
+            console.log("User logged in successfully");
             navigate("/");
         } catch (error) {
             console.error("Error:", error);

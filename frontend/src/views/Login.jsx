@@ -38,7 +38,7 @@ function Signup(){
         <div>
             <div>Log in</div>
             <form className="flex flex-col w-3xs" onSubmit={handleLogin}>
-                <input className="mb-4 border" type="text" onChange={(e) => setEmail(e.target.value)}/>
+                <input className="mb-4 border" type="email" onChange={(e) => setEmail(e.target.value)}/>
                 <input className="mb-4 border" type="password" onChange={(e) => setPassword(e.target.value)}/>
                 <input className="mb-4 border bg-light-green" type="submit" value="Log in" />
             </form>

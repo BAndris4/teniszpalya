@@ -5,11 +5,25 @@ function Navbar() {
     const [checkedCookie, setCheckedCookie] = useState(false);
 
     useEffect(() => {
-        const match = document.cookie.match(/(^|;)\s*tempSession=([^;]+)/);
-        if (match) {
-            setLoggedIn(true);
-        }
-        setCheckedCookie(true);
+        const checkLoginStatus = async () => {
+            try {
+                const response = await fetch("http://localhost:5044/api/Users/me", {
+                    credentials: "include"
+                });
+                if (response.ok) {
+                    setLoggedIn(true);
+                } else {
+                    setLoggedIn(false);
+                }
+            } catch (error) {
+                console.error("Hiba a bejelentkezés ellenőrzésekor:", error);
+                setLoggedIn(false);
+            } finally {
+                setCheckedCookie(true);
+            }
+        };
+
+        checkLoginStatus();
     }, []);
 
     if (!checkedCookie) return null;
