@@ -39,7 +39,7 @@ namespace Teniszpalya.API.Controllers
         {
             var userIDClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-            if(userIDClaim == null || userIDClaim != id.ToString())
+            if (userIDClaim == null || userIDClaim != id.ToString())
             {
                 return Forbid();
             }
@@ -54,6 +54,15 @@ namespace Teniszpalya.API.Controllers
             {
                 return Ok(user);
             }
+        }
+        
+        [Authorize]
+        [HttpGet("me")]
+        public async Task<IActionResult> GetCurrentUser()
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var user = await _context.Users.FindAsync(int.Parse(userId));
+            return Ok(new { user.ID, user.FirstName, user.LastName, user.Email, user.PhoneNumber });
         }
     }
 }

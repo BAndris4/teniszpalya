@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Teniszpalya.API.Data;
 using Teniszpalya.API.Models;
 
@@ -20,6 +21,16 @@ namespace Teniszpalya.API.Controllers
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
+            if (await _context.Users.AnyAsync(u => u.Email == userDTO.Email))
+            {
+                return BadRequest(new { message = "Email already in use." });
+            }
+            
+            if(await _context.Users.AnyAsync(u => u.PhoneNumber == userDTO.PhoneNumber))
+            {
+                return BadRequest(new { message = "Phone Number already in use." });
+            }
+
             var user = new User
             {
                 FirstName = userDTO.FirstName.Trim(),
@@ -32,7 +43,8 @@ namespace Teniszpalya.API.Controllers
 
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
-            return CreatedAtAction(nameof(Register), new { id = user.ID }, user);
+            return Ok(new { message = "User registered successfully" });
+
         }
     }
 }
