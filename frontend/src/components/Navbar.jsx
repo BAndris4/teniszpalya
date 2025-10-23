@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
+import AccountDropdown from "./AccountDropdown";
 function Navbar() {
 
     const [loggedIn, setLoggedIn] = useState(false);
     const [checkedCookie, setCheckedCookie] = useState(false);
+    const [accountDropdown, setAccountDropdown] = useState(false);
 
     useEffect(() => {
         const checkLoginStatus = async () => {
@@ -44,7 +46,15 @@ function Navbar() {
                 </div>
                 <div className="px-[32px] py-[12px] text-[16px] bg-green text-white font-semibold rounded-[30px] cursor-pointer hover:bg-dark-green hover:shadow-lg transition-all duration-300 active:scale-95">Reserve</div>
                 {loggedIn ? (
-                    <img src="src/assets/profile_pic.svg" alt="" className="h-12 cursor-pointer"/>
+                    <div className="relative">
+                        <img 
+                            src="src/assets/profile_pic.svg" 
+                            alt="" 
+                            className="h-12 cursor-pointer hover:scale-110 active:scale-95 transition-all duration-200 hover:drop-shadow-lg" 
+                            onClick={() => setAccountDropdown(!accountDropdown)}
+                        />
+                        <AccountDropdown hidden={!accountDropdown}/>
+                    </div>
                 ) : (
                     <a href="/login">
                         <div className="px-[32px] py-[12px] text-[16px] bg-white border-dark-green text-dark-green border-[1px] rounded-[30px] cursor-pointer hover:bg-dark-green hover:text-white transition-all duration-300 active:scale-95">
