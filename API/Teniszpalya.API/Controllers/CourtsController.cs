@@ -17,9 +17,10 @@ namespace Teniszpalya.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<Court>> GetCourts()
+        public async Task<IActionResult> GetCourts()
         {
-            return await _context.Courts.ToListAsync();
+            var courts = await _context.Courts.ToListAsync();
+            return Ok(courts);
         }
     }
 }

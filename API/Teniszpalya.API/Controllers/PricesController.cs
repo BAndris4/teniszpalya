@@ -17,9 +17,10 @@ namespace Teniszpalya.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<CourtPrice>> GetPrices()
+        public async Task<IActionResult> GetPrices()
         {
-            return await _context.CourtPrices.ToListAsync();
+            var prices = await _context.CourtPrices.ToListAsync();
+            return Ok(prices);
         }
     }
 }

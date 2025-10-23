@@ -1,3 +1,5 @@
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Teniszpalya.API.Data;
@@ -16,17 +18,32 @@ namespace Teniszpalya.API.Controllers
             _context = context;
         }
 
+        [Authorize]
         [HttpGet]
-        public async Task<IEnumerable<User>> GetUsers()
+        public async Task<IActionResult> GetUsers()
         {
-            //token validation
-            return await _context.Users.ToListAsync();
+            var roleClaim = User.FindFirst(ClaimTypes.Role)?.Value;
+
+            if(!Enum.TryParse<Role>(roleClaim, out var role) || role != Role.ADMIN)
+            {
+                return Forbid();
+            }
+
+            var users = await _context.Users.ToListAsync();
+            return Ok(users);
         }
 
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<User>> GetUser(int id)
         {
-            //token validation
+            var userIDClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if(userIDClaim == null || userIDClaim != id.ToString())
+            {
+                return Forbid();
+            }
+
             User? user = await _context.Users.FindAsync(id);
 
             if (user == null)
@@ -35,28 +52,8 @@ namespace Teniszpalya.API.Controllers
             }
             else
             {
-                return user;
+                return Ok(user);
             }
-        }
-
-        [HttpPost]
-        public async Task<ActionResult<User>> PostUser(UserDTO userDTO)
-        {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
-
-            var user = new User
-            {
-                FirstName = userDTO.FirstName.Trim(),
-                LastName = userDTO.LastName.Trim(),
-                Email = userDTO.Email.Trim(),
-                PhoneNumber = userDTO.PhoneNumber.Trim(),
-                PasswordHash = BCrypt.Net.BCrypt.HashPassword(userDTO.Password.Trim()),
-                RoleID = 1
-            };
-
-            _context.Users.Add(user);
-            await _context.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetUser), new { id = user.ID }, user);
         }
     }
 }

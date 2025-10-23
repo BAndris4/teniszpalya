@@ -7,4 +7,10 @@ namespace Teniszpalya.API.Data
         SPRING,
         SUMMER
     }
+
+    public enum Role
+    {
+        USER = 1,
+        ADMIN
+    }
 }
