@@ -53,7 +53,7 @@ function Register() {
         }
 
         const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
-        if (passwordPattern.test(password)) {
+        if (!passwordPattern.test(password)) {
             setPasswordError("Password must be at least 8 characters and include uppercase, lowercase and number");
             setPassword("");
             valid = false;
