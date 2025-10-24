@@ -1,10 +1,14 @@
 import { useState, useEffect } from "react";
 import AccountDropdown from "./AccountDropdown";
+import { useNavigate } from "react-router-dom";
+
 function Navbar() {
 
     const [loggedIn, setLoggedIn] = useState(false);
     const [checkedCookie, setCheckedCookie] = useState(false);
     const [accountDropdown, setAccountDropdown] = useState(false);
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         const checkLoginStatus = async () => {
@@ -30,19 +34,27 @@ function Navbar() {
 
     if (!checkedCookie) return null;
 
+    const handleSectionClick = (section) => {
+        const element = document.getElementById(section);
+        if (element) {
+            element.scrollIntoView({ behavior: "smooth", block: "start" });
+        } else {
+            navigate(`/`);
+            setTimeout(() => {
+                const el = document.getElementById(section);
+                if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+            }, 500);
+        }
+    };
+
     return (
         <nav className="h-[118px] flex justify-end items-center border-dark-green-octa border-b-[1px] z-10 relative text-[18px]">
             <div className="flex flex-row gap-8 h-[54px] mr-[42px] items-center justify-end">
                 <div className="flex flex-row gap-12 text-dark-green">
-                    <div className="cursor-pointer relative after:content-[''] after:absolute after:w-0 after:h-[2px] after:bg-dark-green after:left-0 after:bottom-[-4px] after:transition-all after:duration-300 hover:after:w-full">Home</div>
-                    <div className="cursor-pointer relative after:content-[''] after:absolute after:w-0 after:h-[2px] after:bg-dark-green after:left-0 after:bottom-[-4px] after:transition-all after:duration-300 hover:after:w-full" onClick={() => {
-                            document.getElementById("Courts").scrollIntoView({
-                                behavior: "smooth",
-                                block: "start"
-                            });
-                        }}>Courts</div>
-                    <div className="cursor-pointer relative after:content-[''] after:absolute after:w-0 after:h-[2px] after:bg-dark-green after:left-0 after:bottom-[-4px] after:transition-all after:duration-300 hover:after:w-full">Price List</div>
-                    <div className="cursor-pointer relative after:content-[''] after:absolute after:w-0 after:h-[2px] after:bg-dark-green after:left-0 after:bottom-[-4px] after:transition-all after:duration-300 hover:after:w-full">Contact</div>
+                    <div className="cursor-pointer relative after:content-[''] after:absolute after:w-0 after:h-[2px] after:bg-dark-green after:left-0 after:bottom-[-4px] after:transition-all after:duration-300 hover:after:w-full" onClick={() => handleSectionClick('Navbar')}>Home</div>
+                    <div className="cursor-pointer relative after:content-[''] after:absolute after:w-0 after:h-[2px] after:bg-dark-green after:left-0 after:bottom-[-4px] after:transition-all after:duration-300 hover:after:w-full" onClick={() => handleSectionClick('Courts')}>Courts</div>
+                    <div className="cursor-pointer relative after:content-[''] after:absolute after:w-0 after:h-[2px] after:bg-dark-green after:left-0 after:bottom-[-4px] after:transition-all after:duration-300 hover:after:w-full" onClick={() => handleSectionClick('PriceList')}>Price List</div>
+                    <div className="cursor-pointer relative after:content-[''] after:absolute after:w-0 after:h-[2px] after:bg-dark-green after:left-0 after:bottom-[-4px] after:transition-all after:duration-300 hover:after:w-full" onClick={() => handleSectionClick('Contact')}>Contact</div>
                 </div>
                 <div className="px-[32px] py-[12px] text-[16px] bg-green text-white font-semibold rounded-[30px] cursor-pointer hover:bg-dark-green hover:shadow-lg transition-all duration-300 active:scale-95">Reserve</div>
                 {loggedIn ? (
