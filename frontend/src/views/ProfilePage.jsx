@@ -33,12 +33,13 @@ function ProfilePage() {
     },[]);
 
     return (
-        <div className="min-h-screen">
-            <div className="w-[50vw] h-[50vw] bg-light-green rounded-full fixed blur-[200px] z-0" />
+        <div className="min-h-screen overflow-hidden relative">
+            <div className={`w-[50vw] h-[50vw] bg-light-green rounded-full absolute blur-[200px] z-0 top-[40vh] left-[-10vw] transition-all duration-1000 ${isLoaded ? "opacity-100" : "opacity-0"}`} />
+            <div className={`w-[50vw] h-[50vw] bg-light-green rounded-full absolute blur-[200px] z-0 top-[-50vh] left-[50vw] transition-all duration-1000 ${isLoaded ? "opacity-100" : "opacity-0"}`} />
             
             <Navbar />
             
-            <div className="flex justify-center my-[105px] z-10">
+            <div className="flex justify-center mt-[105px] z-10">
                 
                 
                 <div className={`z-10 w-6xl flex flex-col px-5 transition-all duration-700 ${
