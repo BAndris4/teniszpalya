@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Navbar from '../components/Navbar'
 import Hero from '../sections/Hero';
 import Reserve from '../sections/Reserve';
@@ -25,7 +25,7 @@ function Home() {
   }, []);
 
   return (
-    <div className="App relative bg-white overflow-hidden min-h-screen font-['Poppins',sans-serif]">
+    <div className="relative bg-white overflow-hidden min-h-screen font-['Poppins',sans-serif]">
       <motion.div
         className="w-[50vw] h-[50vw] bg-light-green rounded-full fixed blur-[200px] pointer-events-none z-0"
         animate={topBlob}
