@@ -1,17 +1,48 @@
 import { useNavigate } from "react-router-dom";
-
+import { useState, useEffect } from "react";
 function Signup(){
 
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
     const navigate = useNavigate();
 
     const navigateToRegister = () => {
         navigate("/register");
     }
 
+    const handleLogin = (e) => {
+        e.preventDefault();
+
+        fetch('http://localhost:5044/api/Login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email, password }),
+            credentials: 'include'
+        })
+        .then(response => {
+            if (response.ok) {
+                navigate("/");
+            } else {
+                alert('Invalid email or password');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    };
+
+
     return (
         <div>
-            <div>Sign up</div>
-            <div className="cursor-pointer w-[100px] h-[40px] bg-green rounded-2xl flex justify-center items-center hover:bg-dark-green transition-all duration-300 hover:text-white" onClick={() => navigateToRegister()}>Register</div>
+            <div>Log in</div>
+            <form className="flex flex-col w-3xs" onSubmit={handleLogin}>
+                <input className="mb-4 border" type="email" onChange={(e) => setEmail(e.target.value)}/>
+                <input className="mb-4 border" type="password" onChange={(e) => setPassword(e.target.value)}/>
+                <input className="mb-4 border bg-light-green" type="submit" value="Log in" />
+            </form>
+            <div className="bg-light-green w-3xs border" onClick={() => navigateToRegister()}>Register</div>
         </div>
     )
 }
