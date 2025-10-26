@@ -37,9 +37,9 @@ namespace Teniszpalya.API.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<User>> GetUser(int id)
         {
-            var userIDClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var userID = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-            if (userIDClaim == null || userIDClaim != id.ToString())
+            if (userID == null || userID != id.ToString())
             {
                 return Forbid();
             }
@@ -55,14 +55,32 @@ namespace Teniszpalya.API.Controllers
                 return Ok(user);
             }
         }
-        
+
         [Authorize]
         [HttpGet("me")]
         public async Task<IActionResult> GetCurrentUser()
         {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            var user = await _context.Users.FindAsync(int.Parse(userId));
+            var userID = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var user = await _context.Users.FindAsync(int.Parse(userID));
             return Ok(new { user.ID, user.FirstName, user.LastName, user.Email, user.PhoneNumber });
+        }
+
+        [Authorize]
+        [HttpPut("edit")]
+        public async Task<IActionResult> EditProfile(ProfileDTO profileDTO)
+        {
+            var userID = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var user = await _context.Users.FindAsync(int.Parse(userID));
+
+            if (user == null) return NotFound();
+
+            user.FirstName = profileDTO.FirstName;
+            user.LastName = profileDTO.LastName;
+            user.Email = profileDTO.Email;
+            user.PhoneNumber = profileDTO.PhoneNumber;
+
+            await _context.SaveChangesAsync();
+            return Ok();
         }
     }
 }
