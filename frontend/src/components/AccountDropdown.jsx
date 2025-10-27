@@ -4,6 +4,15 @@ function AccountDropdown({hidden}){
     
     const navigate = useNavigate();
 
+    const handleLogout = () => {
+        fetch("http://localhost:5044/api/Logout", {
+            method: "POST",
+            credentials: "include"
+        }).then(() => {
+            navigate(0);
+        });
+    };
+
     return (
         <div className={`absolute right-0 top-16 w-44 bg-white border-dark-green-octa border rounded-xl shadow-md transition-all duration-200 ease-out ${
             hidden ? 'opacity-0 pointer-events-none translate-y-[-8px]' : 'opacity-100 translate-y-0'
@@ -17,7 +26,7 @@ function AccountDropdown({hidden}){
                     <span>History</span>
                     <img src="../src/assets/history.svg" alt="" className="group-hover:rotate-360 ease-in-out transition-transform duration-500"/>
                 </div>
-                <div className="cursor-pointer flex gap-2 pr-[11px] transition-all duration-200 w-full justify-end hover:translate-x-[-2px] group hover:bg-gray-50 py-1 px-2 rounded-lg">
+                <div className="cursor-pointer flex gap-2 pr-[11px] transition-all duration-200 w-full justify-end hover:translate-x-[-2px] group hover:bg-gray-50 py-1 px-2 rounded-lg" onClick={handleLogout}>
                     <span>Logout</span>
                     <img src="../src/assets/logout.svg" alt="" className="group-hover:-translate-x-[2px] transition-transform duration-200"/>
                 </div>

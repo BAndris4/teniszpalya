@@ -20,7 +20,7 @@ function ProfilePage() {
                 return response.json();
             }
             else {
-                navigate("/login");
+                navigate("/");
             }
         })
         .then(data => {
