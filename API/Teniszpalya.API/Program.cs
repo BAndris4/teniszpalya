@@ -21,8 +21,7 @@ public class Program
                     policy.WithOrigins("http://localhost:5173")
                           .AllowAnyHeader()
                           .AllowAnyMethod()
-                          .AllowCredentials()
-                          .WithExposedHeaders("Set-Cookie");
+                          .AllowCredentials();
                 });
         });
 
