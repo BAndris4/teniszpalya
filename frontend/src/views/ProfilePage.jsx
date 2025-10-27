@@ -8,7 +8,19 @@ function ProfilePage() {
     const [lastName, setLastName] = useState("");
     const [email, setEmail] = useState("");
     const [phoneNumber, setPhoneNumber] = useState("");
+
+    const [firstNameError, setFirstNameError] = useState(false);
+    const [lastNameError, setLastNameError] = useState(false);
+    const [emailError, setEmailError] = useState(false);
+    const [phoneNumberError, setPhoneNumberError] = useState(false);
+
+    const [updatedFirstName, setUpdatedFirstName] = useState("");
+    const [updatedLastName, setUpdatedLastName] = useState("");
+    const [updatedEmail, setUpdatedEmail] = useState("");
+    const [updatedPhoneNumber, setUpdatedPhoneNumber] = useState("");
+
     const [isLoaded, setIsLoaded] = useState(false);
+    
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -32,19 +44,50 @@ function ProfilePage() {
         });
     },[]);
 
+    const validateDetails = (firstName, lastName, phoneNumber, email) => {
+        let valid = true;
+
+        const namePattern = /^[A-Za-zÁÉÍÓÖŐÚÜŰáéíóöőúüű]+$/;
+        const phonePattern = /^\+?[0-9]+$/;
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        if (!namePattern.test(firstName)) {
+            setFirstNameError(true);
+            setUpdatedFirstName("");
+            valid = false;
+        } else setFirstNameError("");
+
+        if (!namePattern.test(lastName)) {
+            setLastNameError(true);
+            setUpdatedLastName("");
+            valid = false;
+        } else setLastNameError("");
+
+        if (!phonePattern.test(phoneNumber)) {
+            setPhoneNumberError(true);
+            setUpdatedPhoneNumber("");
+            valid = false;
+        } else setPhoneNumberError("");
+
+        if (!emailPattern.test(email)) {
+            setEmailError(true);
+            setUpdatedEmail("");
+            valid = false;
+        } else setEmailError("");
+
+        return valid;
+    };
+
     const handleChangeDetails = (e) => {
         e.preventDefault();
         
-        const updatedFirstName = e.target[0].value || firstName;
-        const updatedPhoneNumber = e.target[1].value || phoneNumber;
-        const updatedLastName = e.target[2].value || lastName;
-        const updatedEmail = e.target[3].value || email;
+        if (!validateDetails(updatedFirstName || firstName, updatedLastName || lastName, updatedPhoneNumber || phoneNumber, updatedEmail || email)) return;
 
         const updatedDetails = {
-            firstName: updatedFirstName,
-            lastName: updatedLastName,
-            email: updatedEmail,
-            phoneNumber: updatedPhoneNumber
+            firstName: updatedFirstName || firstName,
+            lastName: updatedLastName || lastName,
+            email: updatedEmail || email,
+            phoneNumber: updatedPhoneNumber || phoneNumber,
         };
 
         if (JSON.stringify(updatedDetails) === JSON.stringify({firstName, lastName, email, phoneNumber})) {
@@ -111,15 +154,27 @@ function ProfilePage() {
                                         <div>First Name</div>
                                         <input 
                                             type="text" 
-                                            className="py-2 pl-4 bg-dark-green-octa text-dark-green-half rounded-lg mt-2 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-dark-green focus:bg-opacity-80" 
+                                            value={updatedFirstName}
+                                            onChange={(e) => {setUpdatedFirstName(e.target.value)}}
+                                            className={`py-2 pl-4 bg-dark-green-octa text-dark-green-half rounded-lg mt-2 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-dark-green focus:bg-opacity-80 ${
+                                            firstNameError
+                                                ? "border border-red-500 focus:ring-red-400"
+                                                : "focus:ring-dark-green focus:bg-opacity-80"
+                                            }`}
                                             placeholder={firstName}
-                                        />
+                                            />
                                     </div>
                                     <div className="flex flex-col">
                                         <div>Phone Number</div>
                                         <input 
                                             type="text" 
-                                            className="py-2 pl-4 bg-dark-green-octa text-dark-green-half rounded-lg mt-2 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-dark-green focus:bg-opacity-80" 
+                                            value={updatedPhoneNumber}
+                                            onChange={(e) => {setUpdatedPhoneNumber(e.target.value)}}
+                                            className={`py-2 pl-4 bg-dark-green-octa text-dark-green-half rounded-lg mt-2 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-dark-green focus:bg-opacity-80 ${
+                                            phoneNumberError
+                                                ? "border border-red-500 focus:ring-red-400"
+                                                : "focus:ring-dark-green focus:bg-opacity-80"
+                                            }`} 
                                             placeholder={phoneNumber}
                                         />
                                     </div>
@@ -129,7 +184,13 @@ function ProfilePage() {
                                         <div>Last Name</div>
                                         <input 
                                             type="text" 
-                                            className="py-2 pl-4 bg-dark-green-octa text-dark-green-half rounded-lg mt-2 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-dark-green focus:bg-opacity-80" 
+                                            value={updatedLastName}
+                                            onChange={(e) => {setUpdatedLastName(e.target.value)}}
+                                            className={`py-2 pl-4 bg-dark-green-octa text-dark-green-half rounded-lg mt-2 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-dark-green focus:bg-opacity-80 ${
+                                            lastNameError
+                                                ? "border border-red-500 focus:ring-red-400"
+                                                : "focus:ring-dark-green focus:bg-opacity-80"
+                                            }`}
                                             placeholder={lastName}
                                         />
                                     </div>
@@ -137,16 +198,24 @@ function ProfilePage() {
                                         <div>Email</div>
                                         <input 
                                             type="text" 
-                                            className="py-2 pl-4 bg-dark-green-octa text-dark-green-half rounded-lg mt-2 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-dark-green focus:bg-opacity-80" 
+                                            value={updatedEmail}
+                                            onChange={(e) => {setUpdatedEmail(e.target.value)}}
+                                            className={`py-2 pl-4 bg-dark-green-octa text-dark-green-half rounded-lg mt-2 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-dark-green focus:bg-opacity-80 ${
+                                            emailError
+                                                ? "border border-red-500 focus:ring-red-400"
+                                                : "focus:ring-dark-green focus:bg-opacity-80"
+                                            }`}
                                             placeholder={email}
                                         />
                                     </div>
                                 </div>
-                                <input 
-                                    type="submit" 
-                                    value="Save Changes" 
-                                    className="ml-2 w-fit px-5 font-bold py-2 mt-5 rounded-lg bg-dark-green text-white cursor-pointer transition-all duration-200 hover:scale-105 hover:shadow-lg active:scale-95"
-                                />
+                                <div className="flex flex-row gap-5 mt-5">
+                                    <input 
+                                        type="submit" 
+                                        value="Save Changes" 
+                                        className="ml-2 w-fit px-5 font-bold py-2 rounded-lg bg-dark-green text-white cursor-pointer transition-all duration-200 hover:scale-105 hover:shadow-lg active:scale-95"
+                                    />
+                                </div>
                             </form>
                         </div>
                         <div className="flex-3 flex-col border-dark-green-octa border shadow-lg shadow-dark-green-octa py-5 px-5 rounded-lg">
