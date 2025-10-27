@@ -32,6 +32,46 @@ function ProfilePage() {
         });
     },[]);
 
+    const handleChangeDetails = (e) => {
+        e.preventDefault();
+        
+        const updatedFirstName = e.target[0].value || firstName;
+        const updatedPhoneNumber = e.target[1].value || phoneNumber;
+        const updatedLastName = e.target[2].value || lastName;
+        const updatedEmail = e.target[3].value || email;
+
+        const updatedDetails = {
+            firstName: updatedFirstName,
+            lastName: updatedLastName,
+            email: updatedEmail,
+            phoneNumber: updatedPhoneNumber
+        };
+
+        if (JSON.stringify(updatedDetails) === JSON.stringify({firstName, lastName, email, phoneNumber})) {
+            alert("No changes detected.");
+            return;
+        } else {
+            fetch("http://localhost:5044/api/Users/edit", {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(updatedDetails),
+                credentials: "include"
+            })
+            .then(response => {
+                if (response.ok) {
+                    console.log("Details updated successfully.");
+                    setTimeout(() => 
+                        navigate(0)
+                    , 1000);
+                } else {
+                    alert("Failed to update details.");
+                }
+            })
+        }
+    }
+
     return (
         <div className="min-h-screen overflow-hidden relative">
             <div className={`w-[50vw] h-[50vw] bg-light-green rounded-full absolute blur-[200px] z-0 top-[40vh] left-[-10vw] transition-all duration-1000 ${isLoaded ? "opacity-100" : "opacity-0"}`} />
@@ -65,47 +105,49 @@ function ProfilePage() {
                     }`}>
                         <div className="flex-4 flex flex-col border-dark-green-octa border shadow-lg shadow-dark-green-octa py-5 px-5 rounded-lg">
                             <div className="font-semibold">Details</div>
-                            <div className="ml-2 flex flex-row mt-3 gap-5">
-                                <div className="flex-col">
-                                    <div>First Name</div>
-                                    <input 
-                                        type="text" 
-                                        className="py-2 pl-4 bg-dark-green-octa text-dark-green-half rounded-lg mt-2 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-dark-green focus:bg-opacity-80" 
-                                        placeholder={firstName}
-                                    />
+                            <form onSubmit = {(e) => handleChangeDetails(e)}>
+                                <div className="ml-2 flex flex-row mt-3 gap-5">
+                                    <div className="flex-col">
+                                        <div>First Name</div>
+                                        <input 
+                                            type="text" 
+                                            className="py-2 pl-4 bg-dark-green-octa text-dark-green-half rounded-lg mt-2 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-dark-green focus:bg-opacity-80" 
+                                            placeholder={firstName}
+                                        />
+                                    </div>
+                                    <div className="flex flex-col">
+                                        <div>Phone Number</div>
+                                        <input 
+                                            type="text" 
+                                            className="py-2 pl-4 bg-dark-green-octa text-dark-green-half rounded-lg mt-2 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-dark-green focus:bg-opacity-80" 
+                                            placeholder={phoneNumber}
+                                        />
+                                    </div>
                                 </div>
-                                <div className="flex flex-col">
-                                    <div>Phone Number</div>
-                                    <input 
-                                        type="text" 
-                                        className="py-2 pl-4 bg-dark-green-octa text-dark-green-half rounded-lg mt-2 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-dark-green focus:bg-opacity-80" 
-                                        placeholder={phoneNumber}
-                                    />
+                                <div className="ml-2 flex flex-row mt-3 gap-5">
+                                    <div className="flex flex-col">
+                                        <div>Last Name</div>
+                                        <input 
+                                            type="text" 
+                                            className="py-2 pl-4 bg-dark-green-octa text-dark-green-half rounded-lg mt-2 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-dark-green focus:bg-opacity-80" 
+                                            placeholder={lastName}
+                                        />
+                                    </div>
+                                    <div className="w-80 flex flex-col">
+                                        <div>Email</div>
+                                        <input 
+                                            type="text" 
+                                            className="py-2 pl-4 bg-dark-green-octa text-dark-green-half rounded-lg mt-2 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-dark-green focus:bg-opacity-80" 
+                                            placeholder={email}
+                                        />
+                                    </div>
                                 </div>
-                            </div>
-                            <div className="ml-2 flex flex-row mt-3 gap-5">
-                                <div className="flex flex-col">
-                                    <div>Last Name</div>
-                                    <input 
-                                        type="text" 
-                                        className="py-2 pl-4 bg-dark-green-octa text-dark-green-half rounded-lg mt-2 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-dark-green focus:bg-opacity-80" 
-                                        placeholder={lastName}
-                                    />
-                                </div>
-                                <div className="w-80 flex flex-col">
-                                    <div>Email</div>
-                                    <input 
-                                        type="text" 
-                                        className="py-2 pl-4 bg-dark-green-octa text-dark-green-half rounded-lg mt-2 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-dark-green focus:bg-opacity-80" 
-                                        placeholder={email}
-                                    />
-                                </div>
-                            </div>
-                            <input 
-                                type="submit" 
-                                value="Save Changes" 
-                                className="ml-2 w-fit px-5 font-bold py-2 mt-5 rounded-lg bg-dark-green text-white cursor-pointer transition-all duration-200 hover:scale-105 hover:shadow-lg active:scale-95"
-                            />
+                                <input 
+                                    type="submit" 
+                                    value="Save Changes" 
+                                    className="ml-2 w-fit px-5 font-bold py-2 mt-5 rounded-lg bg-dark-green text-white cursor-pointer transition-all duration-200 hover:scale-105 hover:shadow-lg active:scale-95"
+                                />
+                            </form>
                         </div>
                         <div className="flex-3 flex-col border-dark-green-octa border shadow-lg shadow-dark-green-octa py-5 px-5 rounded-lg">
                             <div className="font-semibold">Password</div>
