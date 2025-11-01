@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 
-const CheckItem = ({ text }) => (
+const CheckItem = ({ text, light = false }) => (
   <div className="flex items-start gap-3">
     <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-green text-white text-xs">✓</span>
-    <span className="text-dark-green-half">{text}</span>
+    <span className={light ? "text-white/80" : "text-dark-green-half"}>{text}</span>
   </div>
 );
 
@@ -33,7 +33,7 @@ const MembershipCard = ({ title, price, period = "/month", features, highlighted
 
     <div className="mt-6 flex flex-col gap-3">
       {features.map((f, i) => (
-        <CheckItem key={i} text={f} />
+        <CheckItem key={i} text={f} light={highlighted} />
       ))}
     </div>
 
@@ -41,8 +41,8 @@ const MembershipCard = ({ title, price, period = "/month", features, highlighted
       className={
         "mt-8 w-full h-[50px] sm:h-[56px] rounded-full font-semibold transition-all duration-200 " +
         (highlighted
-          ? "bg-green text-white hover:bg-dark-green shadow-lg"
-          : "bg-[#EAF6EE] text-dark-green hover:bg-green hover:text-white")
+          ? "bg-green text-white hover:bg-[#1f7a45] shadow-lg"
+          : "bg-[#EAF6EE] text-dark-green hover:bg-[#2DAE5B] hover:text-white")
       }
     >
       {highlighted ? "Choose plan" : "Choose"}
