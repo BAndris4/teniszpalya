@@ -6,6 +6,9 @@ function CourtCard({ court, isSelected = false, onClick = () => {} }) {
         <motion.div
             id={`court-${id}`}
             onClick={() => onClick(court)}
+            tabIndex={0}
+            role="button"
+            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onClick(court); } }}
             whileHover={{ y: -6, scale: 1.02 }}
             initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}

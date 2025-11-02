@@ -9,6 +9,9 @@ export default function CourtsPage() {
     const navigate = useNavigate();
     const location = useLocation();
     const [selectedId, setSelectedId] = useState(null);
+    const [typeFilter, setTypeFilter] = useState('All');
+    const [locationFilter, setLocationFilter] = useState('All');
+    const [sortOption, setSortOption] = useState('default');
 
     const { topBlob, bottomBlob } = backgroundPositions.Courts || backgroundPositions.Hero;
 
@@ -89,15 +92,69 @@ export default function CourtsPage() {
                     </div>
                 </div>
 
-                {courts.length === 0 ? (
-                    <div className="text-center text-dark-green-half py-20">No courts available yet.</div>
-                ) : (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                        {courts.map((c) => (
-                            <CourtCard key={c.id ?? c.ID ?? c.Id} court={c} />
-                        ))}
-                    </div>
-                )}
+                <div className="mb-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                    <motion.div initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35 }} className="flex gap-3 items-center">
+                        <label className="text-sm text-dark-green-half">Filter:</label>
+                        <motion.select whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.99 }} value={typeFilter} onChange={(e) => setTypeFilter(e.target.value)} className="px-3 py-2 border rounded">
+                            <option value="All">All types</option>
+                            <option value="Clay">Clay</option>
+                            <option value="Hard">Hard</option>
+                            <option value="Grass">Grass</option>
+                            <option value="Synthetic">Synthetic</option>
+                        </motion.select>
+                        <motion.select whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.99 }} value={locationFilter} onChange={(e) => setLocationFilter(e.target.value)} className="px-3 py-2 border rounded">
+                            <option value="All">All locations</option>
+                            <option value="Outdoor">Outdoor</option>
+                            <option value="Indoor">Indoor</option>
+                        </motion.select>
+                    </motion.div>
+
+                    <motion.div initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35, delay: 0.05 }} className="flex gap-3 items-center">
+                        <label className="text-sm text-dark-green-half">Sort:</label>
+                        <motion.select whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.99 }} value={sortOption} onChange={(e) => setSortOption(e.target.value)} className="px-3 py-2 border rounded">
+                            <option value="default">Default</option>
+                            <option value="type-asc">Type A→Z</option>
+                            <option value="type-desc">Type Z→A</option>
+                            <option value="location-asc">Location Indoor→Outdoor</option>
+                            <option value="location-desc">Location Outdoor→Indoor</option>
+                        </motion.select>
+                    </motion.div>
+                </div>
+
+                {/* compute visible courts after filters/sort */}
+                {(() => {
+                    const filtered = courts.filter((c) => {
+                        const typeOk = typeFilter === 'All' || (c.material && c.material.toLowerCase() === typeFilter.toLowerCase());
+                        const loc = c.outdoors ? 'Outdoor' : 'Indoor';
+                        const locOk = locationFilter === 'All' || loc === locationFilter;
+                        return typeOk && locOk;
+                    });
+
+                    const sorted = [...filtered];
+                    if (sortOption === 'type-asc') {
+                        sorted.sort((a,b) => (a.material||'').localeCompare(b.material||'') );
+                    } else if (sortOption === 'type-desc') {
+                        sorted.sort((a,b) => (b.material||'').localeCompare(a.material||'') );
+                    } else if (sortOption === 'location-asc') {
+                        // Indoor first
+                        sorted.sort((a,b) => (a.outdoors === b.outdoors ? 0 : (a.outdoors ? 1 : -1)));
+                    } else if (sortOption === 'location-desc') {
+                        // Outdoor first
+                        sorted.sort((a,b) => (a.outdoors === b.outdoors ? 0 : (a.outdoors ? -1 : 1)));
+                    }
+
+                    if (sorted.length === 0) {
+                        return <div className="text-center text-dark-green-half py-20">No courts match your filters.</div>;
+                    }
+
+                    return (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                            {sorted.map((c) => (
+                                <CourtCard key={c.id ?? c.ID ?? c.Id} court={c} isSelected={selectedId === (c.id ?? c.ID ?? c.Id)} onClick={() => window.location.href = `/courts?selected=${c.id ?? c.ID ?? c.Id}`} />
+                            ))}
+                        </div>
+                    );
+                })()}
             </div>
         </div>
     );
