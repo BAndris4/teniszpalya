@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import CourtCard from "../components/CourtCard"
 
 function Courts() {
@@ -6,14 +7,34 @@ function Courts() {
     const [currentIndex, setCurrentIndex] = useState(0);
     const maxVisible = 4;
 
+    const navigate = useNavigate();
+
     useEffect(() => {
         fetch("http://localhost:5044/api/Courts")
             .then((response) => response.json())
             .then((data) => {
-               setCourtInfo(data);
-                console.log(data); 
+               if (!data || data.length === 0) {
+                   // dev placeholders so gallery is visible
+                   setCourtInfo([
+                       { id: 1, material: 'Clay', outdoors: true },
+                       { id: 2, material: 'Hard', outdoors: false },
+                       { id: 3, material: 'Grass', outdoors: true },
+                       { id: 4, material: 'Synthetic', outdoors: false },
+                   ]);
+               } else {
+                   setCourtInfo(data);
+               }
+                console.log(data);
             })
-            .catch((error) => console.error("Error fetching data:", error));
+            .catch((error) => {
+                console.error("Error fetching data:", error);
+                setCourtInfo([
+                    { id: 1, material: 'Clay', outdoors: true },
+                    { id: 2, material: 'Hard', outdoors: false },
+                    { id: 3, material: 'Grass', outdoors: true },
+                    { id: 4, material: 'Synthetic', outdoors: false },
+                ]);
+            });
     }, []);
 
     const handlePrevious = () => {
@@ -59,7 +80,7 @@ function Courts() {
                         }}
                     >
                         {courtInfo.map((court) => (
-                            <CourtCard key={court.id} court={court} />
+                            <CourtCard key={court.id} court={court} onClick={() => { window.location.href = `/courts?selected=${court.id}` }} />
                         ))}
                     </div>
                 </div>
