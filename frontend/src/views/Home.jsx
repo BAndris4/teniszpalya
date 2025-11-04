@@ -1,8 +1,7 @@
 import { motion } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import Navbar from '../components/Navbar'
 import Hero from '../sections/Hero';
-import Reserve from '../sections/Reserve';
 import Courts from '../sections/Courts';
 import PriceList from '../sections/PriceList';
 import Contact from '../sections/Contact';
@@ -40,7 +39,6 @@ function Home() {
 
       <div id="Navbar"><Navbar /></div>
       <div id="Hero"><Hero /></div>
-      <div id="Reserve"><Reserve /></div>
       <div id="Courts"><Courts /></div>
       <div id="PriceList"><PriceList /></div>
       <div id="Contact"><Contact /></div>
