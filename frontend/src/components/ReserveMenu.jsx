@@ -1,13 +1,16 @@
 import { useNavigate } from "react-router-dom";
+import { useReserveMenu } from "../contexts/ReserveMenuContext";
 
-function ReserveMenu({visible, onClose}) {
+function ReserveMenu() {
 
+    const { isReserveMenuVisible, setIsReserveMenuVisible } = useReserveMenu();
+    
     const navigate = useNavigate();
 
     return (
-        <div className={`absolute w-full h-full flex justify-center items-start pt-5 transition-all duration-300 z-30 ${visible ? 'opacity-100 scale-100' : 'opacity-0 scale-0'}`}>
-            <div className="relative flex flex-col items-end justify-center gap-5 z-20 w-full px-2 sm:px-6 md:px-10 lg:px-10 xl:px-45 2xl:px-80">
-                <div className="w-14 h-14 flex items-center justify-center bg-white rounded-[20px] shadow-md cursor-pointer hover:scale-105 active:scale-95 transition-all duration-300" onClick={onClose}>
+        <div className={`fixed w-full h-full bg-[rgb(0,0,0,0.4)] flex justify-center items-start pt-5 transition-all duration-300 z-30 ${isReserveMenuVisible ? 'opacity-100 pointer-events-auto visible' : 'opacity-0 pointer-events-none invisible'}`}>
+            <div className={`relative flex flex-col items-end justify-center gap-5 z-20 w-full px-2 sm:px-6 md:px-10 lg:px-10 xl:px-45 2xl:px-80 translate-y-0 ${isReserveMenuVisible ? 'opacity-100' : 'opacity-0'} transition-all duration-300`}>
+                <div className="w-14 h-14 flex items-center justify-center bg-white rounded-[20px] shadow-md cursor-pointer hover:scale-105 active:scale-95 transition-all duration-300" onClick={() => setIsReserveMenuVisible(false)}>
                     <img src="./src/assets/cross.svg" alt="" />
                 </div>
                 <div className="flex flex-col lg:flex-row gap-10 w-full">
