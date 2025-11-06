@@ -3,12 +3,15 @@ import Navbar from "../components/Navbar";
 import DatePicker from "../components/DatePicker.jsx";
 import TimeBlock from "../components/TimeBlock.jsx";
 import { ReserveMenuProvider } from "../contexts/ReserveMenuContext.jsx";
+import CourtCardMid from "../components/CourtCardMid.jsx";
 
 function ReserveByTime() {
     const [date, setDate] = useState(new Date());
     const [length, setLength] = useState(1);
     const [time, setTime] = useState("Select a time!");
     const [isTimePickerOpen, setIsTimePickerOpen] = useState(false);
+    const [courts, setCourts] = useState([]);
+    const [selectedCourt, setSelectedCourt] = useState(null);
     
     useEffect(() => {
         setLength(1);
@@ -28,10 +31,22 @@ function ReserveByTime() {
         }
     }
 
+    useEffect(() => {
+        fetch("http://localhost:5044/api/Courts")
+            .then((response) => response.json())
+            .then((data) => {
+                const updatedData = data.map((court) => ({
+                    ...court,
+                    disabled: Math.random() < 0.5
+                }));
+                setCourts(updatedData);
+            } )
+            .catch((error) => console.error("Error fetching data:", error));
+    }, [time, length]);
+
     return (
         <ReserveMenuProvider>
-
-            <div>
+            <div className="select-none">
                 <Navbar/>
                 <div className="flex flex-col p-10 gap-10 items-center justify-start">
                     <DatePicker date={date} setDate={setDate} className=""/>
@@ -61,13 +76,34 @@ function ReserveByTime() {
                                 {isTimePickerOpen &&
                                     <div className="grid grid-cols-3 gap-3 mt-2">
                                         {["8:00","09:00","10:00","11:00","12:00","13:00","14:00","15:00","16:00","17:00","18:00","19:00"].map((t) => (
-                                            <TimeBlock key={t} time={t} onClick={() => setTime(t)} active={time === t}/>
+                                            <TimeBlock key={t} time={t} onClick={() => 
+                                                {
+                                                    setTime(t);
+                                                    setSelectedCourt(null);
+                                                }
+                                                } active={time === t}/>
                                         ))}
                                     </div>
                                 }
                             </div>
                         </div>
-                        <div></div>
+                        <div className="flex flex-col gap-13 bg-white border rounded-[20px] px-16 py-10 border-dark-green-octa shadow-md w-[800px] items-center">
+                            <div className="grid grid-cols-3 gap-x-[30px] gap-y-10">
+                                {courts.map((court) => {
+                                    return (
+                                        <div key={court.id}>
+                                            <CourtCardMid court={court} active={court.id === selectedCourt} onClick={() => {
+                                                if (!court.disabled) setSelectedCourt(court.id);
+                                                }}/>
+                                        </div>
+                                    );
+                                    })
+                                }
+                            </div>
+                            <div className="bg-dark-green active:bg-dark-green-octa text-white font-bold text-[18px] py-4 rounded-[24px] shadow-md hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer w-full text-center">
+                                Accept reservation
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
