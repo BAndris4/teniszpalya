@@ -3,42 +3,21 @@ import AccountDropdown from "./AccountDropdown";
 import { useNavigate } from "react-router-dom";
 import ReserveMenu from "./ReserveMenu";
 import { useReserveMenu } from "../contexts/ReserveMenuContext";
+import { useAuth } from "../contexts/AuthContext";
 
 function Navbar() {
 
-    const [loggedIn, setLoggedIn] = useState(false);
-    const [checkedCookie, setCheckedCookie] = useState(false);
     const [accountDropdown, setAccountDropdown] = useState(false);
     const [isLoaded, setIsLoaded] = useState(false);
 
     const {isReserveMenuVisible, setIsReserveMenuVisible} = useReserveMenu();
-
-    const navigate = useNavigate();
+    const {user} = useAuth();
 
     useEffect(() => {
-        const checkLoginStatus = async () => {
-            try {
-                const response = await fetch("http://localhost:5044/api/Users/me", {
-                    credentials: "include"
-                });
-                if (response.ok) {
-                    setLoggedIn(true);
-                } else {
-                    setLoggedIn(false);
-                }
-            } catch (error) {
-                console.error("Hiba a bejelentkezés ellenőrzésekor:", error);
-                setLoggedIn(false);
-            } finally {
-                setCheckedCookie(true);
-            }
-        };
-
-        checkLoginStatus();
-        setTimeout(() => setIsLoaded(true), 100);
+        setIsLoaded(true);
     }, []);
 
-    if (!checkedCookie) return null;
+    const navigate = useNavigate();
 
     const handleSectionClick = (section) => {
         const element = document.getElementById(section);
@@ -64,7 +43,7 @@ function Navbar() {
                         <div className={`cursor-pointer relative after:content-[''] after:absolute after:w-0 after:h-[2px] after:bg-dark-green after:left-0 after:bottom-[-4px] after:transition-all after:duration-300 hover:after:w-full duration-1000 ease-in-out ${isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-75'}`} onClick={() => handleSectionClick('Contact')}>Contact</div>
                     </div>
                     <div onClick={() => setIsReserveMenuVisible(true)} className={`px-[32px] py-[12px] text-[16px] bg-green text-white font-semibold rounded-[30px] cursor-pointer hover:bg-dark-green hover:shadow-lg transition-all duration-500 active:scale-95 ${isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-75'}`}>Reserve</div>
-                    {loggedIn ? (
+                    {user ? (
                         <div className="relative">
                             <img 
                                 src="src/assets/profile_pic.svg" 

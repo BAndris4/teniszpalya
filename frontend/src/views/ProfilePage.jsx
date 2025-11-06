@@ -1,6 +1,7 @@
 import Navbar from "../components/Navbar";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { ReserveMenuProvider } from "../contexts/ReserveMenuContext";
 
 function ProfilePage() {
 
@@ -174,6 +175,7 @@ function ProfilePage() {
     }
 
     return (
+        <ReserveMenuProvider>
         <div className="min-h-screen overflow-hidden relative">
             <div className={`w-[50vw] h-[50vw] bg-light-green rounded-full absolute blur-[200px] z-0 top-[40vh] left-[-10vw] transition-all duration-1000 ${isLoaded ? "opacity-100" : "opacity-0"}`} />
             <div className={`w-[50vw] h-[50vw] bg-light-green rounded-full absolute blur-[200px] z-0 top-[-50vh] left-[50vw] transition-all duration-1000 ${isLoaded ? "opacity-100" : "opacity-0"}`} />
@@ -407,6 +409,7 @@ function ProfilePage() {
                 `}</style>
             </div>
         </div>
+        </ReserveMenuProvider>
     );
 }
 
