@@ -1,8 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, use } from "react";
 import { ReserveMenuProvider } from "../contexts/ReserveMenuContext";
 import Navbar from "../components/Navbar";
 import DatePicker from "../components/DatePicker";
 import CourtCardSmall from "../components/CourtCardSmall";
+import TimeBlock from "../components/TimeBlock";
 
 function ReserveByCourts() {
     const [date, setDate] = useState(new Date());
@@ -10,11 +11,19 @@ function ReserveByCourts() {
     const [courts, setCourts] = useState([]);
     const [selectedCourt, setSelectedCourt] = useState("Select a court!");
     const [isCourtPickerOpen, setIsCourtPickerOpen] = useState(false);
+    const [selectedTime, setSelectedTime] = useState(null);
+    const [timeList, setTimeList] = useState(["08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00"]);
+    const [freeTimes, setFreeTimes] = useState([]);
+
+    useEffect(() => {
+        const generatedFreeTimes = timeList.filter(() => Math.random() > 0.5);
+        setFreeTimes(generatedFreeTimes);
+        setSelectedTime(null);
+    }, [date, length, selectedCourt]);
     
     useEffect(() => {
         setLength(1);
         setSelectedCourt("Select a court!");
-        setIsCourtPickerOpen(false);
     }, [date]);
     
     function lowerLength() {
@@ -76,7 +85,15 @@ function ReserveByCourts() {
                                 }
                             </div>
                         </div>
-                        <div className="flex flex-col gap-13 bg-white border rounded-[20px] px-10 justify-center items-center py-10 border-dark-green-octa shadow-md w-[800px]">
+                        <div className="flex flex-col gap-13 py-28 bg-white border rounded-[20px] px-10 justify-center items-center border-dark-green-octa shadow-md w-[800px]">
+                            <div className="grid grid-cols-4 gap-x-1.5 gap-y-[50px] w-full">
+                                {timeList.map((time) => (
+                                    <TimeBlock key={time} time={time} disabled={!freeTimes.includes(time)} onClick={() => setSelectedTime(time)} active={selectedTime === time} />
+                                ))}
+                            </div>
+                            <div className="bg-dark-green text-white font-bold text-[18px] py-4 rounded-[24px] shadow-md hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer w-full text-center">
+                                Accept reservation
+                            </div>
                         </div>
                     </div>
                 </div>

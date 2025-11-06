@@ -17,7 +17,6 @@ function ReserveByTime() {
     useEffect(() => {
         setLength(1);
         setTime("Select a time!");
-        setIsTimePickerOpen(false);
     }, [date]);
     
     function lowerLength() {
