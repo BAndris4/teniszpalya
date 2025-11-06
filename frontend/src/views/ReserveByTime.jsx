@@ -12,6 +12,7 @@ function ReserveByTime() {
     const [isTimePickerOpen, setIsTimePickerOpen] = useState(false);
     const [courts, setCourts] = useState([]);
     const [selectedCourt, setSelectedCourt] = useState(null);
+    const [courtPage, setCourtPage] = useState(0);
     
     useEffect(() => {
         setLength(1);
@@ -42,7 +43,11 @@ function ReserveByTime() {
                 setCourts(updatedData);
             } )
             .catch((error) => console.error("Error fetching data:", error));
-    }, [time, length]);
+    }, [time, length, date]);
+
+    const visibleCourts = courts.slice(courtPage * 6, (courtPage + 1) * 6);
+    const showLeftChevron = courts.length >= 6 && courtPage > 0;
+    const showRightChevron = courts.length >= 6 && (courtPage + 1) * 6 < courts.length;
 
     return (
         <ReserveMenuProvider>
@@ -87,20 +92,36 @@ function ReserveByTime() {
                                 }
                             </div>
                         </div>
-                        <div className="flex flex-col gap-13 bg-white border rounded-[20px] px-16 py-10 border-dark-green-octa shadow-md w-[800px] items-center">
-                            <div className="grid grid-cols-3 gap-x-[30px] gap-y-10">
-                                {courts.map((court) => {
-                                    return (
-                                        <div key={court.id}>
-                                            <CourtCardMid court={court} active={court.id === selectedCourt} onClick={() => {
-                                                if (!court.disabled) setSelectedCourt(court.id);
-                                                }}/>
-                                        </div>
-                                    );
-                                    })
-                                }
+                        <div className="flex flex-col gap-13 bg-white border rounded-[20px] px-10 justify-center items-center py-10 border-dark-green-octa shadow-md w-[800px]">
+                            <div className="flex flex-row items-center gap-4 w-full">
+                            
+                                <img src="./src/assets/full_chevron_left.svg" 
+                                    className={`cursor-pointer hover:scale-110 active:scale-90 transition-all duration-300 flex-shrink-0 ${!showLeftChevron ? "opacity-0 pointer-events-none" : ""}`}
+                                    onClick={() => setCourtPage(courtPage - 1)}
+                                />
+                                
+                                <div className="flex-1">
+                                    <div className="grid grid-cols-3 gap-x-[30px] gap-y-10">
+                                        {visibleCourts.map((court) => {
+                                            return (
+                                                <div key={court.id}>
+                                                    <CourtCardMid court={court} active={court.id === selectedCourt} onClick={() => {
+                                                        if (!court.disabled) setSelectedCourt(court.id);
+                                                        }}/>
+                                                </div>
+                                            );
+                                            })
+                                        }
+                                    </div>
+                                </div>
+                            
+                                <img src="./src/assets/full_chevron_right.svg" 
+                                    className={`cursor-pointer hover:scale-110 active:scale-90 transition-all duration-300 flex-shrink-0 ${!showRightChevron ? "opacity-0 pointer-events-none" : ""}`}
+                                    onClick={() => setCourtPage(courtPage + 1)}
+                                />
+                         
                             </div>
-                            <div className="bg-dark-green active:bg-dark-green-octa text-white font-bold text-[18px] py-4 rounded-[24px] shadow-md hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer w-full text-center">
+                            <div className="bg-dark-green text-white font-bold text-[18px] py-4 rounded-[24px] shadow-md hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer w-full text-center">
                                 Accept reservation
                             </div>
                         </div>
