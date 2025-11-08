@@ -22,6 +22,9 @@ namespace Teniszpalya.API.Controllers
         public async Task<IActionResult> ChangePassword(ChangePasswordDTO passwordDTO)
         {
             var userID = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (userID == null) return NotFound();
+
             var user = await _context.Users.FindAsync(int.Parse(userID));
 
             if (user == null) return NotFound();
