@@ -32,7 +32,9 @@ public class Program
         options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
         builder.Services.AddControllers();
 
+#pragma warning disable CS8604 // Possible null reference argument.
         var key = Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]);
+#pragma warning restore CS8604 // Possible null reference argument.
 
         builder.Services.AddAuthentication(options =>
         {

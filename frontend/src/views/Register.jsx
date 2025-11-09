@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import InputField from "../components/InputField";
+import { useAuth } from "../contexts/AuthContext.jsx";
 
 function Register() {
     const [isVisible, setIsVisible] = useState(false);
@@ -15,6 +16,8 @@ function Register() {
     const [phoneNumberError, setPhoneNumberError] = useState("");
     const [emailError, setEmailError] = useState("");
     const [passwordError, setPasswordError] = useState("");
+
+    const { user, setUser } = useAuth();
 
     const navigate = useNavigate();
 
@@ -75,19 +78,24 @@ function Register() {
         };
 
         try {
-            await fetch("http://localhost:5044/api/Register", {
+            await fetch("http://localhost:5044/api/auth/register", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(data)
             });
             console.log("User created successfully");
-            await fetch("http://localhost:5044/api/Login", {
+            await fetch("http://localhost:5044/api/auth/login", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ email, password }),
                 credentials: "include"
             });
             console.log("User logged in successfully");
+            const res = await fetch("http://localhost:5044/api/auth/me", {
+                credentials: "include"
+            })
+            const userData = await res.json();
+            setUser(userData);
             navigate("/");
         } catch (error) {
             console.error("Error:", error);

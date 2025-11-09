@@ -1,6 +1,7 @@
 import Navbar from "../components/Navbar";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { ReserveMenuProvider } from "../contexts/ReserveMenuContext";
 
 function ProfilePage() {
 
@@ -19,12 +20,20 @@ function ProfilePage() {
     const [updatedEmail, setUpdatedEmail] = useState("");
     const [updatedPhoneNumber, setUpdatedPhoneNumber] = useState("");
 
+    const [currentPassword, setCurrentPassword] = useState('');
+    const [newPassword, setNewPassword] = useState('');
+    
+    const [currentPasswordError, setCurrentPasswordError] = useState("");
+    const [newPasswordError, setNewPasswordError] = useState("");
+
     const [isLoaded, setIsLoaded] = useState(false);
+    
+    const [validRequest, setValidRequest] = useState(false);
     
     const navigate = useNavigate();
 
     useEffect(() => {
-        fetch("http://localhost:5044/api/Users/me", {
+        fetch("http://localhost:5044/api/auth/me", {
             credentials: "include"
         })
         .then(response =>  {
@@ -78,6 +87,19 @@ function ProfilePage() {
         return valid;
     };
 
+    const validatePassword = (password) => {
+        let valid = true;
+        const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+
+        if (!passwordPattern.test(password)) {
+            setNewPasswordError("Invalid new password");
+            setNewPassword("");
+            valid = false;
+        } else setNewPasswordError("");
+
+        return valid;
+    }
+
     const handleChangeDetails = (e) => {
         e.preventDefault();
         
@@ -105,7 +127,8 @@ function ProfilePage() {
             .then(response => {
                 if (response.ok) {
                     console.log("Details updated successfully.");
-                    setTimeout(() => 
+                    setValidRequest(true);
+                    setTimeout(() =>
                         navigate(0)
                     , 1000);
                 } else {
@@ -115,7 +138,44 @@ function ProfilePage() {
         }
     }
 
+    const handlePasswordChange = (e) => {
+        e.preventDefault();
+        
+        if (!validatePassword(newPassword)) return;
+
+        if (currentPassword === "" || newPassword === "") {
+            alert("No changes detected.");
+            return;
+        } else {
+            fetch("http://localhost:5044/api/ChangePassword", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ 
+                    password: currentPassword, 
+                    newPassword: newPassword 
+                }),
+                credentials: "include"
+            })
+            .then(response => {
+                if (response.ok) {
+                    console.log("Password changed successfully.");
+                    setValidRequest(true);
+                    setTimeout(() => 
+                        navigate(0)
+                    , 1000);
+                } else {
+                    setCurrentPasswordError("Invalid current password");
+                    setCurrentPassword("");
+                    setNewPassword("");
+                }
+            })
+        }
+    }
+
     return (
+        <ReserveMenuProvider>
         <div className="min-h-screen overflow-hidden relative">
             <div className={`w-[50vw] h-[50vw] bg-light-green rounded-full absolute blur-[200px] z-0 top-[40vh] left-[-10vw] transition-all duration-1000 ${isLoaded ? "opacity-100" : "opacity-0"}`} />
             <div className={`w-[50vw] h-[50vw] bg-light-green rounded-full absolute blur-[200px] z-0 top-[-50vh] left-[50vw] transition-all duration-1000 ${isLoaded ? "opacity-100" : "opacity-0"}`} />
@@ -157,8 +217,8 @@ function ProfilePage() {
                                             value={updatedFirstName}
                                             onChange={(e) => {setUpdatedFirstName(e.target.value)}}
                                             className={`py-2 pl-4 bg-dark-green-octa text-dark-green-half rounded-lg mt-2 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-dark-green focus:bg-opacity-80 ${
-                                            firstNameError
-                                                ? "border border-red-500 focus:ring-red-400"
+                                            firstNameError && !updatedFirstName
+                                                ? "border border-red-500 focus:ring-red-400 placeholder:text-red-500"
                                                 : "focus:ring-dark-green focus:bg-opacity-80"
                                             }`}
                                             placeholder={firstName}
@@ -171,8 +231,8 @@ function ProfilePage() {
                                             value={updatedPhoneNumber}
                                             onChange={(e) => {setUpdatedPhoneNumber(e.target.value)}}
                                             className={`py-2 pl-4 bg-dark-green-octa text-dark-green-half rounded-lg mt-2 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-dark-green focus:bg-opacity-80 ${
-                                            phoneNumberError
-                                                ? "border border-red-500 focus:ring-red-400"
+                                            phoneNumberError && !updatedPhoneNumber
+                                                ? "border border-red-500 focus:ring-red-400 placeholder:text-red-500"
                                                 : "focus:ring-dark-green focus:bg-opacity-80"
                                             }`} 
                                             placeholder={phoneNumber}
@@ -187,8 +247,8 @@ function ProfilePage() {
                                             value={updatedLastName}
                                             onChange={(e) => {setUpdatedLastName(e.target.value)}}
                                             className={`py-2 pl-4 bg-dark-green-octa text-dark-green-half rounded-lg mt-2 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-dark-green focus:bg-opacity-80 ${
-                                            lastNameError
-                                                ? "border border-red-500 focus:ring-red-400"
+                                            lastNameError && !updatedLastName
+                                                ? "border border-red-500 focus:ring-red-400 placeholder:text-red-500"
                                                 : "focus:ring-dark-green focus:bg-opacity-80"
                                             }`}
                                             placeholder={lastName}
@@ -201,8 +261,8 @@ function ProfilePage() {
                                             value={updatedEmail}
                                             onChange={(e) => {setUpdatedEmail(e.target.value)}}
                                             className={`py-2 pl-4 bg-dark-green-octa text-dark-green-half rounded-lg mt-2 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-dark-green focus:bg-opacity-80 ${
-                                            emailError
-                                                ? "border border-red-500 focus:ring-red-400"
+                                            emailError && !updatedEmail
+                                                ? "border border-red-500 focus:ring-red-400 placeholder:text-red-500"
                                                 : "focus:ring-dark-green focus:bg-opacity-80"
                                             }`}
                                             placeholder={email}
@@ -219,37 +279,45 @@ function ProfilePage() {
                             </form>
                         </div>
                         <div className="flex-3 flex-col border-dark-green-octa border shadow-lg shadow-dark-green-octa py-5 px-5 rounded-lg">
-                            <div className="font-semibold">Password</div>
-                            <div className="flex flex-col mt-3 ml-2">
-                                <div>Current password</div>
-                                <input 
-                                    type="password" 
-                                    className="py-2 pl-4 bg-dark-green-octa text-dark-green-half rounded-lg mt-2 w-80 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-dark-green focus:bg-opacity-80" 
-                                    placeholder="Put your current password..."
-                                />
-                            </div>
+                            <form onSubmit = {(e) => handlePasswordChange(e)}>
+                                <div className="font-semibold">Password</div>
+                                <div className="flex flex-col mt-3 ml-2">
+                                    <div>Current password</div>
+                                    <input 
+                                        type="password" 
+                                        value={currentPassword}
+                                        onChange={(e) => setCurrentPassword(e.target.value)}
+                                        className={`py-2 pl-4 bg-dark-green-octa text-dark-green-half rounded-lg mt-2 w-80 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-dark-green focus:bg-opacity-80 ${
+                                        currentPasswordError && !currentPassword
+                                            ? "border border-red-500 focus:ring-red-400 placeholder:text-red-500"
+                                            : "focus:ring-dark-green focus:bg-opacity-80"
+                                        }`} 
+                                        placeholder={currentPasswordError ? currentPasswordError : "Put your current password..."}
+                                    />
+                                </div>
 
-                            <div className="flex flex-col mt-3 ml-2">
-                                <div>New password</div>
-                                <input 
-                                    type="password" 
-                                    className="py-2 pl-4 bg-dark-green-octa text-dark-green-half rounded-lg mt-2 w-80 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-dark-green focus:bg-opacity-80" 
-                                    placeholder="Put your new password..."
-                                />
-                            </div>
-                            <div className="flex flex-row mt-5 gap-5 ml-2">
-                                <input 
-                                    type="submit" 
-                                    value="Save Changes" 
-                                    className="w-fit px-5 font-bold py-2 rounded-lg bg-dark-green text-white cursor-pointer transition-all duration-200 hover:scale-105 hover:shadow-lg active:scale-95"
-                                />
-                                <a 
-                                    href="" 
-                                    className="mt-2 ml-2 text-dark-green-half underline transition-all duration-200 hover:text-dark-green hover:no-underline"
-                                >
-                                    Forgot your password?
-                                </a>
-                            </div>
+                                <div className="flex flex-col mt-3 ml-2">
+                                    <div>New password</div>
+                                    <input 
+                                        type="password" 
+                                        value={newPassword}
+                                        onChange={(e) => setNewPassword(e.target.value)}
+                                        className={`py-2 pl-4 bg-dark-green-octa text-dark-green-half rounded-lg mt-2 w-80 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-dark-green focus:bg-opacity-80 ${
+                                        newPasswordError && !newPassword
+                                            ? "border border-red-500 focus:ring-red-400 placeholder:text-red-500"
+                                            : "focus:ring-dark-green focus:bg-opacity-80"
+                                        }`}
+                                        placeholder={newPasswordError ? newPasswordError : "Put your new password..."}
+                                    />
+                                </div>
+                                <div className="flex flex-row mt-5 gap-5 ml-2">
+                                    <input 
+                                        type="submit" 
+                                        value="Save Changes" 
+                                        className="w-fit px-5 font-bold py-2 rounded-lg bg-dark-green text-white cursor-pointer transition-all duration-200 hover:scale-105 hover:shadow-lg active:scale-95"
+                                    />
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -282,15 +350,66 @@ function ProfilePage() {
                     </svg>
                 </div>
                 
-                <img 
-                    src="src/assets/profile_pic.svg" 
-                    alt="" 
-                    className={`h-[176px] w-[176px] cursor-pointer absolute top-[135px] left-1/2 -translate-x-1/2 z-10 drop-shadow-[0px_4px_10px_rgba(0,0,0,0.25)] transition-all duration-700 hover:scale-105 ${
-                        isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-50'
-                    }`}
-                />
+                <div className="absolute top-[135px] left-1/2 -translate-x-1/2 z-10">
+                    <img 
+                        src="src/assets/profile_pic.svg" 
+                        alt="" 
+                        className={`h-[176px] w-[176px] cursor-pointer drop-shadow-[0px_4px_10px_rgba(0,0,0,0.25)] transition-all duration-700 hover:scale-105 ${
+                            isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-50'
+                        } 
+                        ${validRequest ? 'animate-[spin_0.5s_linear]' : ''}
+                        `}
+                        
+                    />
+                    {validRequest && (
+                        <div className="absolute inset-0 flex items-center justify-center animate-[fadeIn_0.3s_ease-in-out]">
+                            <div className="w-[176px] h-[176px] rounded-full bg-green bg-opacity-20  flex items-center justify-center animate-[scaleIn_0.5s_ease-out]">
+                                <svg 
+                                    className="w-24 h-24 text-white animate-[checkmark_0.6s_ease-in-out]" 
+                                    fill="none" 
+                                    viewBox="0 0 24 24" 
+                                    stroke="currentColor" 
+                                    strokeWidth="3"
+                                >
+                                    <path 
+                                        strokeLinecap="round" 
+                                        strokeLinejoin="round" 
+                                        d="M5 13l4 4L19 7"
+                                        className="animate-[drawCheck_0.6s_ease-in-out_forwards]"
+                                        style={{
+                                            strokeDasharray: '20',
+                                            strokeDashoffset: '20',
+                                        }}
+                                    />
+                                </svg>
+                            </div>
+                        </div>
+                    )}
+                </div>
+                
+                <style>{`
+                    @keyframes fadeIn {
+                        from { opacity: 0; }
+                        to { opacity: 1; }
+                    }
+                    
+                    @keyframes scaleIn {
+                        from { transform: scale(0); }
+                        to { transform: scale(1); }
+                    }
+                    
+                    @keyframes checkmark {
+                        from { transform: scale(0) rotate(-45deg); }
+                        to { transform: scale(1) rotate(0deg); }
+                    }
+                    
+                    @keyframes drawCheck {
+                        to { stroke-dashoffset: 0; }
+                    }
+                `}</style>
             </div>
         </div>
+        </ReserveMenuProvider>
     );
 }
 
