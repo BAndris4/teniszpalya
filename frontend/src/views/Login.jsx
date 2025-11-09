@@ -1,17 +1,24 @@
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
-import { useAuth } from "../contexts/AuthContext.jsx";
+import { useEffect, useState } from "react";
+import { useCurrentUser } from "../hooks/useCurrentUser";
 
 function Login(){
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
-    const { user, setUser } = useAuth();
+
+    const {authenticated} = useCurrentUser();
 
     const navigateToRegister = () => {
         navigate("/register");
     }
+
+    useEffect(() => {
+        if (authenticated === true) {
+            navigate("/");
+        }
+    }, [authenticated]);
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -23,11 +30,6 @@ function Login(){
                 credentials: 'include'
             });
             if (res.ok) {
-                const me = await fetch("http://localhost:5044/api/auth/me", {
-                    credentials: 'include'
-                });
-                const userData = await me.json();
-                setUser(userData);
                 navigate("/");
             }
             else {

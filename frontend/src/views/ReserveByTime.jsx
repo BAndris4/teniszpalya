@@ -6,6 +6,7 @@ import { ReserveMenuProvider } from "../contexts/ReserveMenuContext.jsx";
 import CourtCardMid from "../components/CourtCardMid.jsx";
 import { useNavigate } from "react-router-dom";
 import ConfirmResponsePopup from "../components/ConfirmResponsePopup.jsx";
+import { useCurrentUser } from "../hooks/useCurrentUser.js";
 
 function ReserveByTime() {
     const [date, setDate] = useState(new Date());
@@ -19,15 +20,13 @@ function ReserveByTime() {
     
     const navigate = useNavigate();
 
-    useEffect(() => {
-        const res = fetch("http://localhost:5044/api/auth/me", {
-            credentials: "include"
-        })
+    const {authenticated} = useCurrentUser();
 
-        if (res.status === 401) {
+    useEffect(() => {
+        if (authenticated === false) {
             navigate("/login");
         } 
-    }, []);
+    }, [authenticated]);
 
     useEffect(() => {
         setLength(1);
