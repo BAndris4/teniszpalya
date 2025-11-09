@@ -5,7 +5,7 @@ function AccountDropdown({hidden}){
     const navigate = useNavigate();
 
     const handleLogout = () => {
-        fetch("http://localhost:5044/api/Logout", {
+        fetch("http://localhost:5044/api/auth/logout", {
             method: "POST",
             credentials: "include"
         }).then(() => {

@@ -6,7 +6,7 @@ export function AuthProvider({ children }) {
     const [user, setUser] = useState(null);
 
     useEffect(() => {
-        fetch('http://localhost:5044/api/Users/me', {
+        fetch('http://localhost:5044/api/auth/me', {
             method: 'GET',
             credentials: 'include'
         })

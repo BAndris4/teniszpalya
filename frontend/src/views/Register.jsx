@@ -78,20 +78,20 @@ function Register() {
         };
 
         try {
-            await fetch("http://localhost:5044/api/Register", {
+            await fetch("http://localhost:5044/api/auth/register", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(data)
             });
             console.log("User created successfully");
-            await fetch("http://localhost:5044/api/Login", {
+            await fetch("http://localhost:5044/api/auth/login", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ email, password }),
                 credentials: "include"
             });
             console.log("User logged in successfully");
-            const res = await fetch("http://localhost:5044/api/Users/me", {
+            const res = await fetch("http://localhost:5044/api/auth/me", {
                 credentials: "include"
             })
             const userData = await res.json();

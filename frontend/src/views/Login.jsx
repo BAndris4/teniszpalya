@@ -16,14 +16,14 @@ function Login(){
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
-            const res = await fetch ("http://localhost:5044/api/Login", {
+            const res = await fetch ("http://localhost:5044/api/auth/login", {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({ email, password }),
                 credentials: 'include'
             });
             if (res.ok) {
-                const me = await fetch("http://localhost:5044/api/Users/me", {
+                const me = await fetch("http://localhost:5044/api/auth/me", {
                     credentials: 'include'
                 });
                 const userData = await me.json();

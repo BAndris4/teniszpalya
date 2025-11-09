@@ -33,7 +33,7 @@ function ProfilePage() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        fetch("http://localhost:5044/api/Users/me", {
+        fetch("http://localhost:5044/api/auth/me", {
             credentials: "include"
         })
         .then(response =>  {
