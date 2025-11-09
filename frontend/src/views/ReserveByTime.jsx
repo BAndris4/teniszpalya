@@ -4,7 +4,6 @@ import DatePicker from "../components/DatePicker.jsx";
 import TimeBlock from "../components/TimeBlock.jsx";
 import { ReserveMenuProvider } from "../contexts/ReserveMenuContext.jsx";
 import CourtCardMid from "../components/CourtCardMid.jsx";
-import { useAuth } from "../contexts/AuthContext.jsx";
 import { useNavigate } from "react-router-dom";
 
 function ReserveByTime() {
@@ -16,30 +15,66 @@ function ReserveByTime() {
     const [selectedCourt, setSelectedCourt] = useState(null);
     const [courtPage, setCourtPage] = useState(0);
     
-    const { user } = useAuth();
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (!user) {
+        const res = fetch("http://localhost:5044/api/auth/me", {
+            credentials: "include"
+        })
+
+        if (res.status === 401) {
             navigate("/login");
-        }
-    }, [])
+        } 
+    }, []);
 
     useEffect(() => {
         setLength(1);
         setTime("Select a time!");
     }, [date]);
     
-    function lowerLength() {
+    const lowerLength = () => {
         if (length > 1) {
             setLength(length - 1);
         }
     }
 
-    function higherLength() {
+    const higherLength = () => {
         if (length < 12) {
             setLength(length + 1);
         }
+    }
+
+    const handleReservation = () => {
+        
+        const reservedAt = new Date(date);
+        const [hours, minutes] = time.split(":").map(Number);
+        reservedAt.setHours(hours, minutes, 0, 0);
+
+        const data = {
+            createdAt: Date.now(),
+            reservedAt: reservedAt.getTime(),
+            hours: length,
+            courtID: selectedCourt
+        }
+
+        if (time === null || selectedCourt === null) {
+            alert("Please select a time and a court!");
+            return;
+        }
+
+        fetch("http://localhost:5044/api/Reservations", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            credentials: "include",
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+        })
+        .catch(error => console.error("Error:", error));
     }
 
     useEffect(() => {
@@ -73,8 +108,8 @@ function ReserveByTime() {
                                 <div className="bg-white border border-dark-green px-4 py-2 rounded-2xl flex flex-row justify-between items-center transition-all duration-300 shadow-md">
                                     <div>{length} hour</div>
                                     <div className="flex flex-col gap-1">
-                                        <img src="./src/assets/full_chevron_up.svg" className="hover:scale-110 active:scale-90 transition-all duration-300 cursor-pointer" alt="" onClick={() => higherLength()}/>
-                                        <img src="./src/assets/full_chevron_down.svg" className="hover:scale-110 active:scale-90 transition-all duration-300 cursor-pointer" alt="" onClick={() => lowerLength()}/>
+                                        <img src="./src/assets/full_chevron_up.svg" className="hover:scale-110 active:scale-90 transition-all duration-300 cursor-pointer" alt="" onClick={higherLength}/>
+                                        <img src="./src/assets/full_chevron_down.svg" className="hover:scale-110 active:scale-90 transition-all duration-300 cursor-pointer" alt="" onClick={lowerLength}/>
                                     </div>
                                 </div>
                             </div>
@@ -131,7 +166,7 @@ function ReserveByTime() {
                                 />
                          
                             </div>
-                            <div className="bg-dark-green text-white font-bold text-[18px] py-4 rounded-[24px] shadow-md hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer w-full text-center">
+                            <div className="bg-dark-green text-white font-bold text-[18px] py-4 rounded-[24px] shadow-md hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer w-full text-center" onClick={handleReservation}>
                                 Accept reservation
                             </div>
                         </div>
