@@ -11,23 +11,20 @@ import ProfilePage from './views/ProfilePage.jsx';
 import ReserveByCourts from './views/ReserveByCourts.jsx';
 import ReserveByTime from './views/ReserveByTime.jsx';
 import CourtsPage from './views/CourtsPage.jsx';
-import { AuthProvider } from './contexts/AuthContext.jsx';
 
 function App() {
   return (
-    <AuthProvider>
-      <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/register" element={<Register/>} />
-            <Route path="/login" element={<Signup />} />
-            <Route path="/profile" element={<ProfilePage/>} />
-            <Route path="/courts" element={<CourtsPage/>} />
-            <Route path="/reserveByCourt" element={<ReserveByCourts/>} />
-            <Route path="/reserveByTime" element={<ReserveByTime/>} />
-          </Routes>
-      </BrowserRouter>
-    </AuthProvider>
+    <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/register" element={<Register/>} />
+          <Route path="/login" element={<Signup />} />
+          <Route path="/profile" element={<ProfilePage/>} />
+          <Route path="/courts" element={<CourtsPage/>} />
+          <Route path="/reserveByCourt" element={<ReserveByCourts/>} />
+          <Route path="/reserveByTime" element={<ReserveByTime/>} />
+        </Routes>
+    </BrowserRouter>
   )
 }
 

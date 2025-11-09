@@ -2,6 +2,7 @@ import Navbar from "../components/Navbar";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ReserveMenuProvider } from "../contexts/ReserveMenuContext";
+import { useCurrentUser } from "../hooks/useCurrentUser";
 
 function ProfilePage() {
 
@@ -29,29 +30,23 @@ function ProfilePage() {
     const [isLoaded, setIsLoaded] = useState(false);
     
     const [validRequest, setValidRequest] = useState(false);
+
+    const {user, authenticated} = useCurrentUser();
     
     const navigate = useNavigate();
 
     useEffect(() => {
-        fetch("http://localhost:5044/api/auth/me", {
-            credentials: "include"
-        })
-        .then(response =>  {
-            if (response.ok) {
-                return response.json();
-            }
-            else {
-                navigate("/");
-            }
-        })
-        .then(data => {
-            setFirstName(data.firstName);
-            setLastName(data.lastName);
-            setEmail(data.email);
-            setPhoneNumber(data.phoneNumber);
+        console.log(user, authenticated);
+        if (authenticated === false) {
+            navigate("/login");
+        } else if (authenticated === true){
+            setFirstName(user.firstName);
+            setLastName(user.lastName);
+            setEmail(user.email);
+            setPhoneNumber(user.phoneNumber);
             setTimeout(() => setIsLoaded(true), 100);
-        });
-    },[]);
+        }
+    }, [user, authenticated]);
 
     const validateDetails = (firstName, lastName, phoneNumber, email) => {
         let valid = true;

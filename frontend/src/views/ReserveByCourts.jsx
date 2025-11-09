@@ -5,6 +5,8 @@ import DatePicker from "../components/DatePicker";
 import CourtCardSmall from "../components/CourtCardSmall";
 import TimeBlock from "../components/TimeBlock";
 import { useNavigate } from "react-router-dom";
+import ConfirmResponsePopup from "../components/ConfirmResponsePopup";
+import { useCurrentUser } from "../hooks/useCurrentUser";
 
 function ReserveByCourts() {
     const [date, setDate] = useState(new Date());
@@ -19,15 +21,13 @@ function ReserveByCourts() {
     
     const navigate = useNavigate();
 
-    useEffect(() => {
-        const res = fetch("http://localhost:5044/api/auth/me", {
-            credentials: "include"
-        })
+    const {authenticated} = useCurrentUser();
 
-        if (res.status === 401) {
+    useEffect(() => {
+        if (authenticated === false) {
             navigate("/login");
         } 
-    }, []);
+    }, [authenticated]);
 
     useEffect(() => {
         const generatedFreeTimes = timeList.filter(() => Math.random() > 0.5);
@@ -66,6 +66,8 @@ function ReserveByCourts() {
             hours: length,
             courtID: courtID
         }
+
+        console.log(data);
 
         if (selectedTime === null || selectedCourt === "Select a court!") {
             alert("Please select a time and a court!");
