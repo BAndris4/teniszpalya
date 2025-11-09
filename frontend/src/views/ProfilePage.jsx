@@ -1,6 +1,6 @@
 import Navbar from "../components/Navbar";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { ReserveMenuProvider } from "../contexts/ReserveMenuContext";
 import { useCurrentUser } from "../hooks/useCurrentUser";
 import ProfileSettings from "../components/ProfileSettings";
@@ -14,12 +14,26 @@ function ProfilePage() {
     const [phoneNumber, setPhoneNumber] = useState("");
 
     const [isLoaded, setIsLoaded] = useState(false);
-    const [tab, setTab] = useState("settings");
+
     const [validRequest, setValidRequest] = useState(false);
 
     const {user, authenticated} = useCurrentUser();
     
     const navigate = useNavigate();
+    const location = useLocation();
+    const queryParams = new URLSearchParams(location.search);
+    
+    const [tab, setTab] = useState(queryParams.get("tab") || "settings");
+
+    useEffect(() => {
+        const newTab = queryParams.get("tab");
+        if (newTab && newTab !== tab) setTab(newTab);
+    }, [location.search]);
+
+    const changeTab = (tab) => {
+        setTab(tab);
+        navigate(`?tab=${tab}`, { replace: true });
+    }
 
     useEffect(() => {
         console.log(user, authenticated);
@@ -62,10 +76,10 @@ function ProfilePage() {
                     <div className={`flex flex-row mt-5 gap-5 transition-all duration-700 delay-100 ${
                         isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
                     }`}>
-                        <div className="border border-dark-green-octa py-3 px-9 rounded-lg shadow-lg shadow-dark-green-octa cursor-pointer transition-all duration-300 hover:-translate-y-1 active:translate-y-0" onClick={() => setTab("settings")}>
+                        <div className="border border-dark-green-octa py-3 px-9 rounded-lg shadow-lg shadow-dark-green-octa cursor-pointer transition-all duration-300 hover:-translate-y-1 active:translate-y-0" onClick={() => changeTab("settings")}>
                             Profile Settings
                         </div>
-                        <div className="border border-dark-green-octa py-3 px-9 rounded-lg shadow-lg shadow-dark-green-octa cursor-pointer transition-all duration-300  hover:-translate-y-1 active:translate-y-0" onClick={() => setTab("history")}>
+                        <div className="border border-dark-green-octa py-3 px-9 rounded-lg shadow-lg shadow-dark-green-octa cursor-pointer transition-all duration-300  hover:-translate-y-1 active:translate-y-0" onClick={() => changeTab("history")}>
                             History
                         </div>
                     </div>
@@ -74,15 +88,8 @@ function ProfilePage() {
                     <div className={`transition-all duration-700 delay-200 ${
                         isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
                     }`}>
-                        {
-                        tab == "history" ? <History /> : tab == "settings" ?
-                        <ProfileSettings
-                            firstName={firstName}
-                            lastName={lastName}
-                            email={email}
-                            phoneNumber={phoneNumber}
-                            onUpdateSuccess={handleUpdateSuccess}
-                        /> : null}
+                        {tab === "settings" && <ProfileSettings firstName={firstName} lastName={lastName} email={email} phoneNumber={phoneNumber} onUpdateSuccess={handleUpdateSuccess}/>}
+                        {tab === "history" && <History />}
                         
                     </div>
                 </div>
