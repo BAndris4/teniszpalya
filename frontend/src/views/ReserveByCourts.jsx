@@ -5,7 +5,6 @@ import DatePicker from "../components/DatePicker";
 import CourtCardSmall from "../components/CourtCardSmall";
 import TimeBlock from "../components/TimeBlock";
 import { useNavigate } from "react-router-dom";
-import ReservationOK from "../components/ReservationOk";
 
 function ReserveByCourts() {
     const [date, setDate] = useState(new Date());
@@ -153,7 +152,7 @@ function ReserveByCourts() {
                     </div>
                 </div>
             </div>
-            {isReservationOk && <ReservationOK />}
+            {isReservationOk && <ConfirmResponsePopup title={"Reservation Successful!"} description={"Your booking has been confirmed"}/>}
         </ReserveMenuProvider>
     );
 }

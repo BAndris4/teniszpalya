@@ -5,7 +5,7 @@ import TimeBlock from "../components/TimeBlock.jsx";
 import { ReserveMenuProvider } from "../contexts/ReserveMenuContext.jsx";
 import CourtCardMid from "../components/CourtCardMid.jsx";
 import { useNavigate } from "react-router-dom";
-import ReservationOK from "../components/ReservationOk.jsx";
+import ConfirmResponsePopup from "../components/ConfirmResponsePopup.jsx";
 
 function ReserveByTime() {
     const [date, setDate] = useState(new Date());
@@ -179,7 +179,7 @@ function ReserveByTime() {
                     </div>
                 </div>
             </div>
-            {isReservationOk && <ReservationOK />}
+            {isReservationOk && <ConfirmResponsePopup title={"Reservation Successful!"} description={"Your booking has been confirmed"}/>}
         </ReserveMenuProvider>
     );
 }
