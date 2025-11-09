@@ -10,6 +10,8 @@ import Signup from './views/Login.jsx';
 import ProfilePage from './views/ProfilePage.jsx';
 import ReserveByCourts from './views/ReserveByCourts.jsx';
 import ReserveByTime from './views/ReserveByTime.jsx';
+import ForgotPassword from './views/ForgotPassword.jsx';
+import ResetPassword from './views/ResetPassword.jsx';
 import { AuthProvider } from './contexts/AuthContext.jsx';
 
 function App() {
@@ -20,6 +22,8 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/register" element={<Register/>} />
             <Route path="/login" element={<Signup />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/profile" element={<ProfilePage/>} />
             <Route path="/reserveByCourt" element={<ReserveByCourts/>} />
             <Route path="/reserveByTime" element={<ReserveByTime/>} />
