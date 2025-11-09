@@ -5,6 +5,7 @@ import TimeBlock from "../components/TimeBlock.jsx";
 import { ReserveMenuProvider } from "../contexts/ReserveMenuContext.jsx";
 import CourtCardMid from "../components/CourtCardMid.jsx";
 import { useNavigate } from "react-router-dom";
+import ReservationOK from "../components/ReservationOk.jsx";
 
 function ReserveByTime() {
     const [date, setDate] = useState(new Date());
@@ -14,6 +15,7 @@ function ReserveByTime() {
     const [courts, setCourts] = useState([]);
     const [selectedCourt, setSelectedCourt] = useState(null);
     const [courtPage, setCourtPage] = useState(0);
+    const [isReservationOk, setIsReservationOk] = useState(false);
     
     const navigate = useNavigate();
 
@@ -73,6 +75,10 @@ function ReserveByTime() {
         .then(response => response.json())
         .then(data => {
             console.log(data);
+            setIsReservationOk(true);
+            setTimeout(() => {
+                navigate("/");
+            }, 2500);
         })
         .catch(error => console.error("Error:", error));
     }
@@ -173,6 +179,7 @@ function ReserveByTime() {
                     </div>
                 </div>
             </div>
+            {isReservationOk && <ReservationOK />}
         </ReserveMenuProvider>
     );
 }

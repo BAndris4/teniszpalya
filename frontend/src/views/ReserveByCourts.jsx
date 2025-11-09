@@ -5,6 +5,7 @@ import DatePicker from "../components/DatePicker";
 import CourtCardSmall from "../components/CourtCardSmall";
 import TimeBlock from "../components/TimeBlock";
 import { useNavigate } from "react-router-dom";
+import ReservationOK from "../components/ReservationOk";
 
 function ReserveByCourts() {
     const [date, setDate] = useState(new Date());
@@ -15,6 +16,7 @@ function ReserveByCourts() {
     const [selectedTime, setSelectedTime] = useState(null);
     const [timeList, setTimeList] = useState(["08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00"]);
     const [freeTimes, setFreeTimes] = useState([]);
+    const [isReservationOk, setIsReservationOk] = useState(false);
     
     const navigate = useNavigate();
 
@@ -82,6 +84,10 @@ function ReserveByCourts() {
         .then(response => response.json())
         .then(data => {
             console.log(data);
+            setIsReservationOk(true);
+            setTimeout(() => {
+                navigate("/");
+            }, 2500);
         })
         .catch(error => console.error("Error:", error));
     }
@@ -147,6 +153,7 @@ function ReserveByCourts() {
                     </div>
                 </div>
             </div>
+            {isReservationOk && <ReservationOK />}
         </ReserveMenuProvider>
     );
 }
