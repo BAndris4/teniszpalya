@@ -8,6 +8,7 @@
 *.db-shm
 *.db-wal
 *.sln
+*.db
 
 # User-specific files
 *.suo
