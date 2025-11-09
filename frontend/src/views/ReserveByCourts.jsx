@@ -4,6 +4,8 @@ import Navbar from "../components/Navbar";
 import DatePicker from "../components/DatePicker";
 import CourtCardSmall from "../components/CourtCardSmall";
 import TimeBlock from "../components/TimeBlock";
+import { useAuth } from "../contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 function ReserveByCourts() {
     const [date, setDate] = useState(new Date());
@@ -14,6 +16,15 @@ function ReserveByCourts() {
     const [selectedTime, setSelectedTime] = useState(null);
     const [timeList, setTimeList] = useState(["08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00"]);
     const [freeTimes, setFreeTimes] = useState([]);
+    
+    const { user } = useAuth();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (!user) {
+            navigate("/login");
+        }
+    }, [])
 
     useEffect(() => {
         const generatedFreeTimes = timeList.filter(() => Math.random() > 0.5);

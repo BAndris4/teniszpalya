@@ -4,6 +4,8 @@ import DatePicker from "../components/DatePicker.jsx";
 import TimeBlock from "../components/TimeBlock.jsx";
 import { ReserveMenuProvider } from "../contexts/ReserveMenuContext.jsx";
 import CourtCardMid from "../components/CourtCardMid.jsx";
+import { useAuth } from "../contexts/AuthContext.jsx";
+import { useNavigate } from "react-router-dom";
 
 function ReserveByTime() {
     const [date, setDate] = useState(new Date());
@@ -14,6 +16,15 @@ function ReserveByTime() {
     const [selectedCourt, setSelectedCourt] = useState(null);
     const [courtPage, setCourtPage] = useState(0);
     
+    const { user } = useAuth();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (!user) {
+            navigate("/login");
+        }
+    }, [])
+
     useEffect(() => {
         setLength(1);
         setTime("Select a time!");
