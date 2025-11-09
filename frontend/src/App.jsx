@@ -10,6 +10,7 @@ import Signup from './views/Login.jsx';
 import ProfilePage from './views/ProfilePage.jsx';
 import ReserveByCourts from './views/ReserveByCourts.jsx';
 import ReserveByTime from './views/ReserveByTime.jsx';
+import CourtsPage from './views/CourtsPage.jsx';
 import { AuthProvider } from './contexts/AuthContext.jsx';
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
             <Route path="/register" element={<Register/>} />
             <Route path="/login" element={<Signup />} />
             <Route path="/profile" element={<ProfilePage/>} />
+            <Route path="/courts" element={<CourtsPage/>} />
             <Route path="/reserveByCourt" element={<ReserveByCourts/>} />
             <Route path="/reserveByTime" element={<ReserveByTime/>} />
           </Routes>
