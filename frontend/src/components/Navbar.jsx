@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import ReserveMenu from "./ReserveMenu";
 import { useReserveMenu } from "../contexts/ReserveMenuContext";
 import { useCurrentUser } from "../hooks/useCurrentUser";
+import profilePic from "../assets/profile_pic.svg";
 
 function Navbar() {
 
@@ -40,15 +41,16 @@ function Navbar() {
                         <div className={`cursor-pointer relative after:content-[''] after:absolute after:w-0 after:h-[2px] after:bg-dark-green after:left-0 after:bottom-[-4px] after:transition-all after:duration-300 hover:after:w-full duration-1000 ease-in-out ${isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-75'}`} onClick={() => handleSectionClick('Navbar')}>Home</div>
                         <div className={`cursor-pointer relative after:content-[''] after:absolute after:w-0 after:h-[2px] after:bg-dark-green after:left-0 after:bottom-[-4px] after:transition-all after:duration-300 hover:after:w-full duration-1000 ease-in-out ${isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-75'}`} onClick={() => handleSectionClick('Courts')}>Courts</div>
                         <div className={`cursor-pointer relative after:content-[''] after:absolute after:w-0 after:h-[2px] after:bg-dark-green after:left-0 after:bottom-[-4px] after:transition-all after:duration-300 hover:after:w-full duration-1000 ease-in-out ${isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-75'}`} onClick={() => handleSectionClick('PriceList')}>Price List</div>
-                        <div className={`cursor-pointer relative after:content-[''] after:absolute after:w-0 after:h-[2px] after:bg-dark-green after:left-0 after:bottom-[-4px] after:transition-all after:duration-300 hover:after:w-full duration-1000 ease-in-out ${isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-75'}`} onClick={() => handleSectionClick('Contact')}>Contact</div>
+                        <div className={`cursor-pointer relative after:content-[''] after:absolute after:w-0 after:h-[2px] after:bg-dark-green after:left-0 after:bottom-[-4px] after:transition-all after:duration-300 hover:after:w-full duration-1000 ease-in-out ${isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-75'}`} onClick={() => navigate('/contact')}>Contact</div>
+                        <div className={`cursor-pointer relative after:content-[''] after:absolute after:w-0 after:h-[2px] after:bg-dark-green after:left-0 after:bottom-[-4px] after:transition-all after:duration-300 hover:after:w-full duration-1000 ease-in-out ${isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-75'}`} onClick={() => navigate('/tournaments')}>Tournaments</div>
                     </div>
                     <div onClick={() => setIsReserveMenuVisible(true)} className={`px-[32px] py-[12px] text-[16px] bg-green text-white font-semibold rounded-[30px] cursor-pointer hover:bg-dark-green hover:shadow-lg transition-all duration-500 active:scale-95 ${isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-75'}`}>Reserve</div>
                     {authenticated ? (
                         <div className="relative">
                             <img 
-                                src="src/assets/profile_pic.svg" 
-                                alt="" 
-                                className={`h-12 cursor-pointer hover:scale-110 active:scale-95 transition-all duration-700 hover:drop-shadow-lg ease-in-out${isLoaded ? 'opacity-100 scale-100 rotate-0' : 'opacity-0 scale-75 rotate-360'}`}
+                                src={profilePic} 
+                                alt="Profile" 
+                                className={`h-12 cursor-pointer hover:scale-110 active:scale-95 transition-all duration-700 hover:drop-shadow-lg ease-in-out ${isLoaded ? 'opacity-100 scale-100 rotate-0' : 'opacity-0 scale-75 rotate-360'}`}
                                 onClick={() => setAccountDropdown(!accountDropdown)}
                             />
                             <AccountDropdown hidden={!accountDropdown}/>
